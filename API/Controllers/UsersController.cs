@@ -5,9 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]  //Redirection would be /api/users
-public class UsersController(DataContext context) : ControllerBase
+public class UsersController(DataContext context) : CustomBaseController
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
