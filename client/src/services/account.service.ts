@@ -18,11 +18,23 @@ export class AccountService {
           localStorage['user'] = JSON.stringify(user);
           this.currentUser.set(user);
         }
+        return user;
       })
     );
   }
 
-  logout(){
+  register(userData: any) {
+    return this.http.post<User>(`${this.baseUrl}account/register`, userData).pipe(
+      map(user => {
+        if (user) {
+          localStorage['user'] = JSON.stringify(user);
+          this.currentUser.set(user);
+        }
+        return user;
+      })
+    );
+  }
+  logout() {
     localStorage.removeItem('user');
     this.currentUser.set(null);
   }

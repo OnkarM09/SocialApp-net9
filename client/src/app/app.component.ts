@@ -1,5 +1,3 @@
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from "./navbar/navbar.component";
@@ -14,26 +12,10 @@ import { HomeComponent } from "./home/home.component";
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  private readonly http = inject(HttpClient);
   private readonly accountService = inject(AccountService);
-  title = 'client';
-  users: any = [];
 
   ngOnInit(): void {
-    this.getUsers();
     this.setCurrentUser();
-  }
-
-  getUsers() {
-    this.http.get('https://localhost:5111/api/users').subscribe(({
-      next: (res: any) => {
-        console.log(res);
-        this.users = res;
-      },
-      error: (err) => {
-        console.log('error: ', err);
-      }
-    }));
   }
 
   setCurrentUser() {
