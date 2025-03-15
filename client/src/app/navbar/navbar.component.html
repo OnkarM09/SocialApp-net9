@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">Social App</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      @if(accountService.currentUser()){
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">Link</a>
+        </li>
+      </ul>
+      <div class="btn-group ms-auto" dropdown>
+        <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+          aria-controls="dropdown-basic">
+          Welcome User<span class="caret"></span>
+        </button>
+        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+          <li role="menuitem"><a class="dropdown-item">Edit Profile</a></li>
+          <li role="menuitem"><a class="dropdown-item">Messages</a></li>
+          <li role="menuitem"><a class="dropdown-item" (click)="logout()">Logout</a></li>
+        </ul>
+      </div>
+      }@else {
+      <form class="d-flex ms-auto" #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off">
+        <input class="form-control me-2" name="username" placeholder="Username" [(ngModel)]="model.username" />
+        <input class="form-control me-2" placeholder="Password" type="password" name="password"
+          [(ngModel)]="model.password" />
+        <button class="btn btn-outline-success" type="submit">Login</button>
+      </form>
+      }
+    </div>
+  </div>
+</nav>
