@@ -3,16 +3,16 @@ using System.Text;
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    public class AccountController(DataContext context) : CustomBaseController
+    public class AccountController(DataContext context, ITokenService tokenService) : CustomBaseController
     {
-
         [HttpPost("register")]
-        public async Task<ActionResult<AppUser>> Register(RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             using var hmac = new HMACSHA512();
             AppUser user = new AppUser
@@ -25,7 +25,11 @@ namespace API.Controllers
             {
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
-                return user;
+                return new UserDto
+                {
+                    Username = user.UserName,
+                    Token = tokenService.CreateToken(user)
+                };
             }
             return BadRequest("Username already exists");
 
@@ -37,7 +41,7 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AppUser>> Login(LoginDto loginUser)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginUser)
         {
             bool isUser = await IsUserExist(loginUser.Username);
             if (isUser)
@@ -51,7 +55,12 @@ namespace API.Controllers
                     if (computedHash[i] != user.PasswordHash[i]) return BadRequest("Invalid Password");
                 }
 
-                return Ok(user);
+                //Pass the JWT token
+                return new UserDto
+                {
+                    Username = user.UserName,
+                    Token = tokenService.CreateToken(user)
+                };
             }
             return BadRequest("User not found");
         }
