@@ -1,5 +1,7 @@
+using API.Data;
 using API.Extensions;
 using API.Middlewares;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,5 +20,20 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope(); //Creating scope of service
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<DataContext>();
+    await context.Database.MigrateAsync();
+    await Seed.SeedUsers(context);
+}
+catch (Exception e)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(e, "Error while migrating users data");
+    throw new Exception();
+}
 
 app.Run();
