@@ -1,0 +1,10 @@
+<div class="container page-container text-center">
+  @if(errors){
+    <h5>Error : {{errors.message}}</h5>
+    <p class="font-weight-bold">
+      Internal server error occured. Please try again later.
+    </p>
+    <p>Please check the details below in case if you want to resolve this error:</p>
+    <code style="background : whitesmoke">{{errors.details}}</code>
+  }
+</div>
