@@ -10,26 +10,42 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         @if(accountService.currentUser()){
         <li class="nav-item">
-          <a class="nav-link active text-light" routerLink="/" routerLinkActive="active"><i class="fa fa-home h4 m-0 me-2"></i>Home</a>
+          <a class="nav-link active text-light" routerLink="/" routerLinkActive="active"><i
+              class="fa fa-home h4 m-0 me-2"></i>Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-light" routerLink="/members" routerLinkActive="active"><i class="fa fa-users h4 m-0 me-2"></i>People</a>
+          <a class="nav-link text-light" routerLink="/members" routerLinkActive="active"><i
+              class="fa fa-users h4 m-0 me-2"></i>People</a>
         </li>
         }
         <li class="nav-item">
-          <a class="nav-link text-light" routerLink="/error" routerLinkActive="active"><i class="fa fa-exclamation-triangle h4 m-0 me-2" aria-hidden="true"></i> Errors</a>
+          <a class="nav-link text-light" routerLink="/error" routerLinkActive="active"><i
+              class="fa fa-exclamation-triangle h4 m-0 me-2" aria-hidden="true"></i> Errors</a>
         </li>
       </ul>
       @if(accountService.currentUser()){
       <div class="btn-group ms-auto" dropdown>
         <button id="button-basic" dropdownToggle type="button" class="btn btn-light dropdown-toggle text-capitalize"
           aria-controls="dropdown-basic">
-          <i class="fa fa-user-circle-o me-2" aria-hidden="true"></i> {{accountService.currentUser()?.username}}<span class="caret"></span>
+          <i class="fa fa-user-circle-o me-2" aria-hidden="true"></i> {{accountService.currentUser()?.username}}<span
+            class="caret"></span>
         </button>
         <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
-          <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-user-circle me-2" aria-hidden="true"></i>Edit Profile</a></li>
-          <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)" routerLink="/messages"><i class="fa fa-comments me-2" aria-hidden="true"></i>Messages</a></li>
-          <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)" (click)="logout()"><i class="fa fa-sign-out me-2" aria-hidden="true"></i>Logout</a></li>
+          <li>
+            <a class="dropdown-item" href="javascript:void(0)" routerLink="/member/edit">
+              <i class="fa fa-user-circle me-2" aria-hidden="true"></i>
+              Edit Profile</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="javascript:void(0)" routerLink="/messages">
+              <i class="fa fa-comments me-2" aria-hidden="true"></i>
+              Messages</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">
+              <i class="fa fa-sign-out me-2" aria-hidden="true"></i>
+              Logout</a>
+          </li>
         </ul>
       </div>
       }@else {

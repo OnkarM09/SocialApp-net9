@@ -1,0 +1,75 @@
+@if(member){
+<div class="row">
+  <div class="col-md-3 mb-3">
+    <h1 class="text-center m-0">My Profile</h1>
+  </div>
+  <div class="col-md-9">
+    @if (editForm.dirty ) {
+      <div class="alert alert-warning">
+        <p class="m-0"><strong>Information:</strong>
+          You have made changes. Any unsaved changes will be lost.
+        </p>
+      </div>
+    }
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center">
+      <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}" class="card-img img-thumbnail">
+      <div class="card-body">
+        <div>
+          <strong class="d-flex align-items-center justify-content-center"><i class="fa fa-map-marker me-2"></i>
+            Location:</strong>
+          <p>{{member.city}}, {{member.country}}</p>
+        </div>
+        <div>
+          <strong class="d-flex align-items-center justify-content-center"><i class="fa fa-birthday-cake me-2 small"
+              aria-hidden="true"></i> Age:</strong>
+          <p>{{member.age}}</p>
+        </div>
+        <div>
+          <strong class="d-flex align-items-center justify-content-center"><i class="fa fa-check-circle me-1"
+              aria-hidden="true"></i> Last Active:</strong>
+          <p>{{member.lastActive | date }}</p>
+        </div>
+        <!-- <div>
+            <strong>Since:</strong>
+            <p>{{member.createdd | date}}</p>
+          </div> -->
+      </div>
+      <div class="card-footer">
+        <div class="btn-group d-flex">
+          <button type="submit" form="editForm" class="btn btn-success" [disabled]="!editForm.dirty">Update Profile</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <tabset class="member-tabs">
+      <tab heading="About {{member.knownAs}}">
+        <form class="p-4" id="editForm" #editForm="ngForm" (ngSubmit)="updateProfile()">
+          <h4 class="m-0">Description</h4>
+          <textarea name="introduction" class="form-control" [(ngModel)]="member.introduction" rows="6"></textarea>
+          <h4 class="mt-4">Looking for</h4>
+          <textarea name="lookingFor" class="form-control" [(ngModel)]="member.lookingFor" rows="6"></textarea>
+          <h4 class="mt-4">Interests</h4>
+          <textarea name="interests" class="form-control" [(ngModel)]="member.interests" rows="6"></textarea>
+          <h4 class="mt-4">Location details</h4>
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <label for="city">City:</label>
+              <input type="text" name="city" [(ngModel)]="member.city" class="form-control mx-2" />
+            </div>
+            <div class="col-md-6">
+              <label for="country">Country:</label>
+              <input type="text" name="country" [(ngModel)]="member.country" class="form-control mx-2" />
+            </div>
+          </div>
+        </form>
+      </tab>
+      <tab heading="Edit Photo">
+        <h4>Photo edit will go here</h4>
+      </tab>
+    </tabset>
+  </div>
+</div>
+}
