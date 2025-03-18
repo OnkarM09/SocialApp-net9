@@ -1,6 +1,7 @@
-<nav class="navbar navbar-expand-lg bg-primary-subtle fixed-top">
+<nav class="navbar navbar-expand-lg bg-primary fixed-top">
   <div class="container">
-    <a class="navbar-brand" routerLink="/">Social App</a>
+    <a class="navbar-brand text-light p-0 d-flex align-items-center" routerLink="/">
+      <img class="me-2" src="../../assets/social-media.png" alt="brand-icon">LinkUp</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -9,21 +10,21 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         @if(accountService.currentUser()){
         <li class="nav-item">
-          <a class="nav-link active" routerLink="/" routerLinkActive="active">Home</a>
+          <a class="nav-link active text-light" routerLink="/" routerLinkActive="active"><i class="fa fa-home h4 m-0 me-2"></i>Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/members" routerLinkActive="active">People</a>
+          <a class="nav-link text-light" routerLink="/members" routerLinkActive="active"><i class="fa fa-users h4 m-0 me-2"></i>People</a>
         </li>
         }
         <li class="nav-item">
-          <a class="nav-link" routerLink="/error" routerLinkActive="active">Errors</a>
+          <a class="nav-link text-light" routerLink="/error" routerLinkActive="active"><i class="fa fa-exclamation-triangle h4 m-0 me-2" aria-hidden="true"></i> Errors</a>
         </li>
       </ul>
       @if(accountService.currentUser()){
       <div class="btn-group ms-auto" dropdown>
-        <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle text-capitalize"
+        <button id="button-basic" dropdownToggle type="button" class="btn btn-light dropdown-toggle text-capitalize"
           aria-controls="dropdown-basic">
-          Welcome {{accountService.currentUser()?.username}}<span class="caret"></span>
+          <i class="fa fa-user me-2"></i> {{accountService.currentUser()?.username}}<span class="caret"></span>
         </button>
         <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
           <li role="menuitem"><a class="dropdown-item">Edit Profile</a></li>

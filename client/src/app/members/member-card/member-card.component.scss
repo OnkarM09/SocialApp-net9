@@ -1,5 +1,6 @@
 .card {
   transition: all .1s ease;
+  overflow: hidden;
 
   &:hover {
     transform: scale(1.1);
@@ -32,7 +33,13 @@
     }
   }
 
-  .animate{
-    transition : all 0.3s ease-in-out;
+  .animate {
+    transition: all 0.3s ease-in-out;
+  }
+
+  .btn {
+    &.btn-icon {
+      padding : .5rem 1rem;
+    }
   }
 }

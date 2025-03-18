@@ -1,35 +1,35 @@
 @if(member){
 <div class="row">
-  <div class="col-md-4">
-    <div class="card">
+  <div class="col-md-3">
+    <div class="card text-center">
       <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}" class="card-img img-thumbnail">
       <div class="card-body">
         <div>
-          <strong>Location:</strong>
+          <strong class="d-flex align-items-center justify-content-center"><i class="fa fa-map-marker me-2"></i> Location:</strong>
           <p>{{member.city}}, {{member.country}}</p>
         </div>
         <div>
-          <strong>Age:</strong>
+          <strong class="d-flex align-items-center justify-content-center"><i class="fa fa-birthday-cake me-2 small" aria-hidden="true"></i> Age:</strong>
           <p>{{member.age}}</p>
         </div>
         <div>
-          <strong>Last Active:</strong>
+          <strong class="d-flex align-items-center justify-content-center"><i class="fa fa-check-circle me-1" aria-hidden="true"></i> Last Active:</strong>
           <p>{{member.lastActive | date }}</p>
         </div>
-        <div>
+        <!-- <div>
           <strong>Since:</strong>
           <p>{{member.createdd | date}}</p>
-        </div>
+        </div> -->
       </div>
       <div class="card-footer">
         <div class="btn-group d-flex">
-          <button class="btn btn-primary">Like</button>
-          <button class="btn btn-primary">Messages</button>
+          <button class="btn btn-primary"><i class="fa fa-thumbs-up h4 m-0" aria-hidden="true"></i></button>
+          <button class="btn btn-success"><i class="fa fa-comments h4 m-0" aria-hidden="true"></i></button>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-8">
+  <div class="col-md-9">
     <tabset class="member-tabs">
       <tab heading="About {{member.knownAs}}">
         <h4>Description</h4>
