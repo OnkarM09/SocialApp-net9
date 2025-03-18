@@ -24,12 +24,12 @@
       <div class="btn-group ms-auto" dropdown>
         <button id="button-basic" dropdownToggle type="button" class="btn btn-light dropdown-toggle text-capitalize"
           aria-controls="dropdown-basic">
-          <i class="fa fa-user me-2"></i> {{accountService.currentUser()?.username}}<span class="caret"></span>
+          <i class="fa fa-user-circle-o me-2" aria-hidden="true"></i> {{accountService.currentUser()?.username}}<span class="caret"></span>
         </button>
         <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
-          <li role="menuitem"><a class="dropdown-item">Edit Profile</a></li>
-          <li role="menuitem"><a class="dropdown-item" routerLink="/messages">Messages</a></li>
-          <li role="menuitem"><a class="dropdown-item" (click)="logout()">Logout</a></li>
+          <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-user-circle me-2" aria-hidden="true"></i>Edit Profile</a></li>
+          <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)" routerLink="/messages"><i class="fa fa-comments me-2" aria-hidden="true"></i>Messages</a></li>
+          <li role="menuitem"><a class="dropdown-item" href="javascript:void(0)" (click)="logout()"><i class="fa fa-sign-out me-2" aria-hidden="true"></i>Logout</a></li>
         </ul>
       </div>
       }@else {
