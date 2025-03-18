@@ -1,9 +1,11 @@
+using System.Security.Claims;
 using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,6 +38,28 @@ public class UsersController(IUserRepository userRepository, IMapper mapper) : C
     {
         MemberDto? user = await userRepository.GetMemberAsync(username);
         return Ok(user);
+    }
+
+    [HttpPut]
+    public async Task<ActionResult> UpdateUser(MemberDto memberUpdateDto)
+    {
+        var userName = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userName == null) return BadRequest("User from not found in token");
+
+        AppUser? user = await userRepository.GetUserByUserNameAsync(userName);
+        if (user == null) return BadRequest("User not found!");
+
+        //mapper.Map(memberUpdateDto, user);
+        user.Interests = memberUpdateDto.Interests;
+        user.LookingFor = memberUpdateDto.LookingFor;
+        user.Introduction = memberUpdateDto.Introduction;
+        user.City = memberUpdateDto.City;
+        user.Country = memberUpdateDto.Country;
+        userRepository.Update(user);
+
+        if (await userRepository.SaveAllAsync()) return NoContent();
+
+        return StatusCode(500, "Failed to update user");
     }
 
 }
