@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, inject, OnInit, ViewChild } from '@angular/core';
 import { AccountService } from '../../../services/account.service';
 import { MembersService } from '../../../services/members.service';
 import { Member } from '../../models/member';
@@ -19,7 +19,14 @@ export class MemberEditComponent implements OnInit {
   private readonly memberService = inject(MembersService);
   private readonly toaster = inject(ToastrService);
 
-  @ViewChild('editForm') editForm? : NgForm;
+  //To show browser leave site confimation on navigating through browser functionalities
+  @HostListener('window:beforeunload', ['$event']) notify($event: any) {
+    if (this.editForm?.dirty) {
+      $event.returnValue = true;
+    }
+  }
+
+  @ViewChild('editForm') editForm?: NgForm;
 
   member!: Member;
 
@@ -33,7 +40,7 @@ export class MemberEditComponent implements OnInit {
     });
   }
 
-  updateProfile(){
+  updateProfile() {
     console.log(this.member);
     this.toaster.success("Your profile details have been successfully updated")
     this.editForm?.reset(this.member);
