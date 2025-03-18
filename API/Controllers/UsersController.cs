@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers;
 
 [Authorize]
-public class UsersController(IUserRepository userRepository) : CustomBaseController
+public class UsersController(IUserRepository userRepository, IMapper mapper) : CustomBaseController
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
