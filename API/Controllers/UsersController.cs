@@ -76,7 +76,6 @@ public class UsersController(IUserRepository userRepository, IMapper mapper, IPh
         user.Photos.Add(photo);
         if (await userRepository.SaveAllAsync()) return CreatedAtAction(nameof(GetUser),
              new { username = user.UserName }, mapper.Map<PhotoDto>(photo));
-        //Instead of sending 200 OK which we preivously did, we are now sending 201 CreatedAtAction            
         return BadRequest("Problem while adding photo");
     }
 

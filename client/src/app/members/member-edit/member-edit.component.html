@@ -5,11 +5,11 @@
   </div>
   <div class="col-md-9">
     @if (editForm.dirty ) {
-      <div class="alert alert-warning">
-        <p class="m-0"><strong>Information:</strong>
-          You have made changes. Any unsaved changes will be lost.
-        </p>
-      </div>
+    <div class="alert alert-warning">
+      <p class="m-0"><strong>Information:</strong>
+        You have made changes. Any unsaved changes will be lost.
+      </p>
+    </div>
     }
   </div>
   <div class="col-md-3">
@@ -38,7 +38,8 @@
       </div>
       <div class="card-footer">
         <div class="btn-group d-flex">
-          <button type="submit" form="editForm" class="btn btn-success" [disabled]="!editForm.dirty">Update Profile</button>
+          <button type="submit" form="editForm" class="btn btn-success" [disabled]="!editForm.dirty">Update
+            Profile</button>
         </div>
       </div>
     </div>
@@ -67,7 +68,7 @@
         </form>
       </tab>
       <tab heading="Edit Photo">
-        <h4>Photo edit will go here</h4>
+        <app-photo-editor [memberInput]="member"></app-photo-editor>
       </tab>
     </tabset>
   </div>
