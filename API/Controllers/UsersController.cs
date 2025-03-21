@@ -65,15 +65,18 @@ public class UsersController(IUserRepository userRepository, IMapper mapper, IPh
     public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
     {
         var user = await userRepository.GetUserByUserNameAsync(User.GetUserName());
-        if(user == null) return BadRequest("User not found!");
+        if (user == null) return BadRequest("User not found!");
         var result = await photoService.AddPhotoAsync(file);
-        if(result.Error !=null) return BadRequest(result.Error.Message);
-        Photo photo = new Photo{
+        if (result.Error != null) return BadRequest(result.Error.Message);
+        Photo photo = new Photo
+        {
             Url = result.SecureUrl.AbsoluteUri,
             PublicId = result.PublicId
         };
         user.Photos.Add(photo);
-        if(await userRepository.SaveAllAsync()) return mapper.Map<PhotoDto>(photo);
+        if (await userRepository.SaveAllAsync()) return CreatedAtAction(nameof(GetUser),
+             new { username = user.UserName }, mapper.Map<PhotoDto>(photo));
+        //Instead of sending 200 OK which we preivously did, we are now sending 201 CreatedAtAction            
         return BadRequest("Problem while adding photo");
     }
 
