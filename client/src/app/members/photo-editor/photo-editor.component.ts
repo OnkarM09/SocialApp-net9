@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, output } from '@angular/core';
+import { Component, inject, input, OnInit, output, TemplateRef } from '@angular/core';
 import { Member } from '../../models/member';
 import { DecimalPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { FileUploader, FileUploadModule } from 'ng2-file-upload';
@@ -8,13 +8,15 @@ import { Photo } from '../../models/photo';
 import { MembersService } from '../../../services/members.service';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-photo-editor',
   standalone: true,
   imports: [NgIf, NgFor, NgClass, NgStyle, FileUploadModule, DecimalPipe, SweetAlert2Module],
   templateUrl: './photo-editor.component.html',
-  styleUrl: './photo-editor.component.scss'
+  styleUrl: './photo-editor.component.scss',
+  providers: [BsModalService]
 })
 export class PhotoEditorComponent implements OnInit {
   accountService = inject(AccountService);
@@ -26,9 +28,20 @@ export class PhotoEditorComponent implements OnInit {
   uploader?: FileUploader;
   hasBaseDropZoneOver = false;
   baseUrl = environment.apiUrl;
+  modalRef?: BsModalRef;
+  config = {
+    animated: true,
+    class: 'modal-lg'
+  };
+
+  constructor(private readonly modalService: BsModalService) { }
 
   ngOnInit(): void {
     this.initializeFileUploader();
+  }
+
+  openModal(template: TemplateRef<void>) {
+    this.modalRef = this.modalService.show(template, this.config);
   }
 
   fileOverBase(e: any) {
@@ -55,6 +68,12 @@ export class PhotoEditorComponent implements OnInit {
       const updateMember = { ...this.memberInput() };
       updateMember.photos.push(photo);
       this.memberChangeOutput.emit(updateMember);
+      if (this.modalRef) this.modalRef.hide();
+      Swal.fire({
+        title: "Success",
+        text: "Your photo has been added.",
+        icon: "success"
+      });
     }
   }
   setMainPhoto(photo: Photo): void {
