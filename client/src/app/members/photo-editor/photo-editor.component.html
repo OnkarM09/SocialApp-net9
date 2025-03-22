@@ -3,7 +3,7 @@
   <div class="col-md-4">
     <img src="{{photo.url}}" alt="{{memberInput().knownAs}}'s photo" class="img-thumbnail mb-1">
     <div class="tex-center">
-      <button class="btn btn-sm">Main</button>
+      <button class="btn btn-sm" (click)="setMainPhoto(photo)" [disabled]="photo.isMain">Main</button>
       <button class="btn btn-danger btn-sm">
         <i class="fa fa-trash"></i>
       </button>

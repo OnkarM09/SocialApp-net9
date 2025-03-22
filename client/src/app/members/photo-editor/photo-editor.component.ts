@@ -5,6 +5,7 @@ import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { AccountService } from '../../../services/account.service';
 import { environment } from '../../../environments/environment';
 import { Photo } from '../../models/photo';
+import { MembersService } from '../../../services/members.service';
 
 @Component({
   selector: 'app-photo-editor',
@@ -15,6 +16,7 @@ import { Photo } from '../../models/photo';
 })
 export class PhotoEditorComponent implements OnInit {
   accountService = inject(AccountService);
+  private readonly memberService = inject(MembersService);
 
   memberInput = input.required<Member>();
   memberChangeOutput = output<Member>();
@@ -34,7 +36,7 @@ export class PhotoEditorComponent implements OnInit {
   initializeFileUploader() {
     this.uploader = new FileUploader({
       url: this.baseUrl + 'users/add-photo',
-      authToken:  'Bearer ' + this.accountService.currentUser()?.token,
+      authToken: 'Bearer ' + this.accountService.currentUser()?.token,
       isHTML5: true,
       allowedFileType: ['image'],
       removeAfterUpload: true,
@@ -52,5 +54,25 @@ export class PhotoEditorComponent implements OnInit {
       updateMember.photos.push(photo);
       this.memberChangeOutput.emit(updateMember);
     }
+  }
+  setMainPhoto(photo: Photo): void {
+    this.memberService.setMainPhoto(photo.id).subscribe({
+      next: () => {
+        const user = this.accountService.currentUser();
+        if (user) {
+          user.photoUrl = photo.url;
+          this.accountService.setCurrentUser(user);
+        }
+
+        //To update the main photo in the profile details section
+        const updateMember = { ...this.memberInput() };
+        updateMember.photoUrl = photo.url;
+        updateMember.photos.forEach(p => {
+          if (p.isMain) p.isMain = false;
+          if (p.id == photo.id) p.isMain = true;
+        });
+        this.memberChangeOutput.emit(updateMember);
+      }
+    });
   }
 }
