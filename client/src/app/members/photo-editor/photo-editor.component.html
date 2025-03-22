@@ -2,9 +2,9 @@
   @for (photo of memberInput().photos; track photo.id) {
   <div class="col-md-4">
     <img src="{{photo.url}}" alt="{{memberInput().knownAs}}' profile" class="img-thumbnail mb-1" >
-    <div class="tex-center">
-      <button class="btn btn-sm" (click)="setMainPhoto(photo)" [disabled]="photo.isMain">Main</button>
-      <button class="btn btn-danger btn-sm" [disabled]="photo.isMain" (click)="deletePhoto(photo)">
+    <div class="d-flex justify-content-center mt-2">
+      <button class="btn btn-sm btn-success me-3" (click)="setMainPhoto(photo)" [disabled]="photo.isMain"><i class="fa fa-camera" aria-hidden="true"></i></button>
+      <button class="btn btn-danger btn-sm" [disabled]="photo.isMain" (click)="deletePhotoConfirmation(photo)">
         <i class="fa fa-trash"></i>
       </button>
     </div>
@@ -49,21 +49,21 @@
       </table>
 
       <div>
-        <div>
+        <div class="mb-3">
           Queue progress:
-          <div class="progress">
+          <div class="progress mt-1">
             <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader?.progress + '%' }"></div>
           </div>
         </div>
-        <button type="button" class="btn btn-success btn-s" (click)="uploader?.uploadAll()"
+        <button type="button" class="btn btn-success btn-s me-3" (click)="uploader?.uploadAll()"
           [disabled]="!uploader?.getNotUploadedItems()?.length">
           <span class="fa fa-upload"></span> Upload all
         </button>
-        <button type="button" class="btn btn-warning btn-s" (click)="uploader?.cancelAll()"
+        <button type="button" class="btn btn-warning btn-s me-3" (click)="uploader?.cancelAll()"
           [disabled]="!uploader?.isUploading">
           <span class="fa fa-ban"></span> Cancel all
         </button>
-        <button type="button" class="btn btn-danger btn-s" (click)="uploader?.clearQueue()"
+        <button type="button" class="btn btn-danger btn-s me-3" (click)="uploader?.clearQueue()"
           [disabled]="!uploader?.queue?.length">
           <span class="fa fa-trash"></span> Remove all
         </button>

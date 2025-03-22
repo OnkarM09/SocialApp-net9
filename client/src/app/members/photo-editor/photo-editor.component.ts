@@ -6,11 +6,13 @@ import { AccountService } from '../../../services/account.service';
 import { environment } from '../../../environments/environment';
 import { Photo } from '../../models/photo';
 import { MembersService } from '../../../services/members.service';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-photo-editor',
   standalone: true,
-  imports: [NgIf, NgFor, NgClass, NgStyle, FileUploadModule, DecimalPipe],
+  imports: [NgIf, NgFor, NgClass, NgStyle, FileUploadModule, DecimalPipe, SweetAlert2Module],
   templateUrl: './photo-editor.component.html',
   styleUrl: './photo-editor.component.scss'
 })
@@ -72,6 +74,11 @@ export class PhotoEditorComponent implements OnInit {
           if (p.id == photo.id) p.isMain = true;
         });
         this.memberChangeOutput.emit(updateMember);
+        Swal.fire({
+          title: "Updated",
+          text: "Your profile photo has been updated.",
+          icon: "success"
+        });
       }
     });
   }
@@ -82,6 +89,26 @@ export class PhotoEditorComponent implements OnInit {
         const updateMember = { ...this.memberInput() };
         updateMember.photos = updateMember.photos.filter(p => p.id !== photo.id);
         this.memberChangeOutput.emit(updateMember);
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your photo has been deleted.",
+          icon: "success"
+        });
+      }
+    });
+  }
+
+  deletePhotoConfirmation(photo: Photo): void {
+    Swal.fire({
+      title: "Are you sure?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Delete"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.deletePhoto(photo);
       }
     });
   }
