@@ -47,7 +47,9 @@ namespace API.Controllers
             bool isUser = await IsUserExist(loginUser.Username);
             if (isUser)
             {
-                AppUser user = await context.Users.FirstOrDefaultAsync(x => x.UserName.ToLower() == loginUser.Username.ToLower());
+                AppUser? user = await context.Users
+                                    .Include(p => p.Photos)
+                                        .FirstOrDefaultAsync(x => x.UserName.ToLower() == loginUser.Username.ToLower());
                 using var hmac = new HMACSHA512(user.PasswordSalt);
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginUser.Password));
                 int len = computedHash.Length;
@@ -60,7 +62,8 @@ namespace API.Controllers
                 return new UserDto
                 {
                     Username = user.UserName,
-                    Token = tokenService.CreateToken(user)
+                    Token = tokenService.CreateToken(user),
+                    PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url
                 };
             }
             return BadRequest("User not found");

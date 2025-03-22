@@ -12,12 +12,16 @@ export class AccountService {
   private readonly baseUrl = environment.apiUrl;
   currentUser = signal<User | null>(null);
 
+  setCurrentUser(user: User) {
+    localStorage['user'] = JSON.stringify(user);
+    this.currentUser.set(user);
+  }
+
   login(payload: any) {
     return this.http.post<User>(`${this.baseUrl}account/login`, payload).pipe(
       map(user => {
         if (user) {
-          localStorage['user'] = JSON.stringify(user);
-          this.currentUser.set(user);
+          this.setCurrentUser(user);
         }
         return user;
       })
@@ -28,8 +32,7 @@ export class AccountService {
     return this.http.post<User>(`${this.baseUrl}account/register`, userData).pipe(
       map(user => {
         if (user) {
-          localStorage['user'] = JSON.stringify(user);
-          this.currentUser.set(user);
+          this.setCurrentUser(user);
         }
         return user;
       })
