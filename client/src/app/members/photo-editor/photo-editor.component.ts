@@ -75,4 +75,14 @@ export class PhotoEditorComponent implements OnInit {
       }
     });
   }
+
+  deletePhoto(photo: Photo): void {
+    this.memberService.deletePhoto(photo.id).subscribe({
+      next: _ => {
+        const updateMember = { ...this.memberInput() };
+        updateMember.photos = updateMember.photos.filter(p => p.id !== photo.id);
+        this.memberChangeOutput.emit(updateMember);
+      }
+    });
+  }
 }
