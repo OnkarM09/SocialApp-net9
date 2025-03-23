@@ -1,9 +1,10 @@
 import { Component, inject, OnInit, output } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { ToastrService } from 'ngx-toastr';
 import { JsonPipe } from '@angular/common';
 import { TextInputComponent } from "../_forms/text-input/text-input.component";
+import { count } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -15,6 +16,7 @@ import { TextInputComponent } from "../_forms/text-input/text-input.component";
 export class RegisterComponent implements OnInit {
   private readonly accountService = inject(AccountService);
   private readonly toaster = inject(ToastrService);
+  private readonly fb = inject(FormBuilder);
   model: any = {};
   cancelRegistration = output<boolean>();
   registerForm: FormGroup = new FormGroup({});
@@ -24,10 +26,15 @@ export class RegisterComponent implements OnInit {
   }
 
   initializeRegisterForm() {
-    this.registerForm = new FormGroup({
-      username: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]),
-      confirmPassword: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(8), this.matchValues('password')])
+    this.registerForm = this.fb.group({
+      username: ['', [Validators.required, Validators.email]],
+      gender: ['gender'],
+      knownAs: ['', Validators.required],
+      dateOfBirth: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), this.matchValues('password')]]
     });
 
     this.registerForm.controls['password'].valueChanges.subscribe({
