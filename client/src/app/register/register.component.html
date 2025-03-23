@@ -1,52 +1,15 @@
 <form [formGroup]="registerForm" (ngSubmit)="register()" autocomplete="off">
   <h2 class="text-center text-primary">Sign Up</h2>
-  <div class="mb-3 form-floating" [class.has-danger]="registerForm.get('username')?.errors && registerForm.get('username')?.touched">
-    <input type="text" class="form-control" formControlName="username" placeholder="Username"
-    [class.is-invalid]="registerForm.get('username')?.errors && registerForm.get('username')?.touched">
-    <label for="username">Username</label>
-    @if(registerForm.get('username')?.errors?.['required']){
-      <div class="invalid-feedback text-start mt-2">This field is mandatory.</div>
-    }
-    @if(registerForm.get('username')?.errors?.['email']){
-      <div class="invalid-feedback text-start mt-2">Enter a valid email address.</div>
-    }
-  </div>
-  <div class="mb-3 form-floating"
-  [class.has-danger]="registerForm.get('password')?.errors && registerForm.get('password')?.touched">
-    <input type="password" class="form-control" formControlName="password"  placeholder="Password"
-    [class.is-invalid]="registerForm.get('password')?.errors && registerForm.get('password')?.touched"
-    [class.is-valid]="!registerForm.get('confirmPassword')?.errors?.['isMatching'] && registerForm.get('confirmPassword')?.touched">
-    <label for="password">Password</label>
-    @if(registerForm.get('password')?.errors?.['required']){
-      <div class="invalid-feedback text-start mt-2">This field is mandatory.</div>
-    }
-    @if(registerForm.get('password')?.errors?.['minlength']){
-      <div class="invalid-feedback text-start mt-2">Password length should be minimum 4.</div>
-    }
-    @if(registerForm.get('password')?.errors?.['maxlength']){
-      <div class="invalid-feedback text-start mt-2">Password length should be maximum 8.</div>
-    }
-  </div>
-  <div class="mb-3 form-floating"
-  [class.has-success]="registerForm.get('confirmPassword')?.valid && registerForm.get('confirmPassword')?.touched"
-  [class.has-danger]="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched">
-    <input type="password" class="form-control" formControlName="confirmPassword"  placeholder="Confirm password"
-    [class.is-invalid]="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched"
-    [class.is-valid]="!registerForm.get('confirmPassword')?.errors?.['isMatching'] && registerForm.get('confirmPassword')?.touched">
-    <label for="password">Confirm password</label>
-    @if(registerForm.get('confirmPassword')?.errors?.['required']){
-      <div class="invalid-feedback text-start mt-2">This field is mandatory.</div>
-    }
-    @if(registerForm.get('confirmPassword')?.errors?.['minlength']){
-      <div class="invalid-feedback text-start mt-2">Password length should be minimum 4.</div>
-    }
-    @if(registerForm.get('confirmPassword')?.errors?.['maxlength']){
-      <div class="invalid-feedback text-start mt-2">Password length should be maximum 8.</div>
-    }
-    @if(registerForm.get('confirmPassword')?.errors?.['isMatching']){
-      <div class="invalid-feedback text-start mt-2">Password do no match.</div>
-    }
-  </div>
+
+  <app-text-input [formControl]="$any(registerForm.controls['username'])" [label]="'username'"
+    [type]="'text'"></app-text-input>
+
+  <app-text-input [formControl]="$any(registerForm.controls['password'])" [label]="'password'"
+    [type]="'password'"></app-text-input>
+
+  <app-text-input [formControl]="$any(registerForm.controls['confirmPassword'])" [label]="'confirmPassword'"
+    [type]="'password'"></app-text-input>
+
   <div class="form-group text-center">
     <button class="btn btn-primary me-2" type="submit">Register</button>
     <button class="btn btn-default me-2" type="button" (click)="cancel()">Cancel</button>
@@ -56,4 +19,3 @@
 <p>Form Value: {{registerForm.value | json}}</p>
 <p>Form Status: {{registerForm.status | json}}</p>
 <p>Errors : {{registerForm.get('confirmPassword')?.errors | json}}</p>
-
