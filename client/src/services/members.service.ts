@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Member } from '../app/models/member';
 import { Observable } from 'rxjs';
+import { PaginatedResult } from '../app/models/pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +11,21 @@ import { Observable } from 'rxjs';
 export class MembersService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl;
+  paginatedResult = signal<PaginatedResult<Member[]> | null>(null);
 
-  getMembers(): Observable<Member[]> {
-    return this.http.get<Member[]>(`${this.baseUrl}users`);
+  getMembers(pageNum: number, pageSiz: number) {
+
+    return this.http.get<Member[]>(`${this.baseUrl}users`, { observe: 'response', params : {
+      pageNumber : pageNum,
+      pageSize : pageSiz
+    } }).subscribe({
+      next: response => {
+        this.paginatedResult.set({
+          items: response.body as Member[],
+          pagination: JSON.parse(response.headers.get('Pagination')!)
+        });
+      }
+    });
   }
 
   getMember(username: string): Observable<Member> {
@@ -27,7 +40,7 @@ export class MembersService {
     return this.http.put(this.baseUrl + 'users/set-main-photo/' + photoId, {});
   }
 
-  deletePhoto(photoId : number){
+  deletePhoto(photoId: number) {
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
   }
 }
