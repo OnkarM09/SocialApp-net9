@@ -27,7 +27,7 @@
       <div class="btn-group ms-auto align-items-center" dropdown>
         <img class="me-2 rounded-circle" src="{{accountService.currentUser()?.photoUrl  || '../../../../assets/user.png'}}" width="50" height="50" alt="Profile" />
         <a id="button-basic" dropdownToggle type="button" class="dropdown-toggle text-capitalize text-white text-decoration-none"
-          aria-controls="dropdown-basic">{{accountService.currentUser()?.username}}<span
+          aria-controls="dropdown-basic">{{accountService.currentUser()?.knownAs}}<span
             class="caret"></span>
         </a>
         <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">

@@ -33,7 +33,6 @@ namespace API.Controllers
                 };
             }
             return BadRequest("Username already exists");
-
         }
 
         private async Task<bool> IsUserExist(string userName)

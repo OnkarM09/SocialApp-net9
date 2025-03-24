@@ -3,7 +3,7 @@
     <form [formGroup]="registerForm" (ngSubmit)="register()" autocomplete="off">
       <h2 class="text-center text-primary">Sign Up</h2>
 
-      <app-text-input [formControl]="$any(registerForm.controls['username'])" [label]="'username'"
+      <app-text-input [formControl]="$any(registerForm.controls['username'])" [label]="'Email'"
         [type]="'text'"></app-text-input>
 
       <app-text-input [formControl]="$any(registerForm.controls['knownAs'])" [label]="'Known as'"
@@ -38,14 +38,21 @@
       <app-text-input [formControl]="$any(registerForm.controls['confirmPassword'])" [label]="'Confirm password'"
         [type]="'password'"></app-text-input>
 
+      @if(validationErrors){
+      <div class="alert alert-danger alert-dismissible text-start">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <ul>
+          @for(error of validationErrors; track $index){
+          <li>{{error}}</li>
+          }
+        </ul>
+      </div>
+    }
+
       <div class="form-group text-center">
-        <button class="btn btn-primary me-2" type="submit">Register</button>
+        <button class="btn btn-primary me-2" type="submit" [disabled]="!registerForm.valid">Register</button>
         <button class="btn btn-default me-2" type="button" (click)="cancel()">Cancel</button>
       </div>
     </form>
   </div>
 </div>
-
-<p>Form Value: {{registerForm.value | json}}</p>
-<p>Form Status: {{registerForm.status | json}}</p>
-<p>Errors : {{registerForm.get('confirmPassword')?.errors | json}}</p>

@@ -67,6 +67,14 @@ export class PhotoEditorComponent implements OnInit {
       const photo = JSON.parse(response);
       const updateMember = { ...this.memberInput() };
       updateMember.photos.push(photo);
+      if (photo.isMain) {
+        const user = this.accountService.currentUser();
+        if (user) {
+          user.photoUrl = photo.url;
+          this.accountService.setCurrentUser(user);
+        }
+        updateMember.photoUrl = photo.url;
+      }
       this.memberChangeOutput.emit(updateMember);
       if (this.modalRef) this.modalRef.hide();
       Swal.fire({

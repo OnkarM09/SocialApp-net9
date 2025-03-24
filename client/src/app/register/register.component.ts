@@ -1,26 +1,26 @@
 import { Component, inject, OnInit, output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
-import { ToastrService } from 'ngx-toastr';
-import { JsonPipe } from '@angular/common';
 import { TextInputComponent } from "../_forms/text-input/text-input.component";
 import { DatePickerComponent } from "../_forms/date-picker/date-picker.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, JsonPipe, TextInputComponent, DatePickerComponent],
+  imports: [ReactiveFormsModule, TextInputComponent, DatePickerComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent implements OnInit {
   private readonly accountService = inject(AccountService);
-  private readonly toaster = inject(ToastrService);
   private readonly fb = inject(FormBuilder);
-  model: any = {};
+  private readonly router = inject(Router);
+
   cancelRegistration = output<boolean>();
   registerForm: FormGroup = new FormGroup({});
   maxDate = new Date();
+  validationErrors: string[] | undefined;
 
   ngOnInit(): void {
     this.initializeRegisterForm();
@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
   initializeRegisterForm() {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.email]],
-      gender: ['gender'],
+      gender: ['male'],
       knownAs: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
       city: ['', Validators.required],
@@ -51,20 +51,25 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    console.log(this.registerForm.value);
-    // this.accountService.register(this.model).subscribe({
-    //   next: (res) => {
-    //     console.log('Registration successful: ', res);
-    //     this.cancel();
-    //   },
-    //   error: (err) => {
-    //     console.log('Error registering: ', err);
-    //     this.toaster.error(err.error);
-    //   }
-    // });
+    //To convert date and time to date only (removed time)
+    const dob = this.dateOnly(this.registerForm.get('dateOfBirth')?.value);
+    this.registerForm.patchValue({ dateOfBirth: dob });
+    this.accountService.register(this.registerForm.value).subscribe({
+      next: _ => {
+        this.router.navigateByUrl('/members');
+      },
+      error: (err) => {
+        this.validationErrors = err;
+      }
+    });
   }
 
   cancel() {
     this.cancelRegistration.emit(false);
+  }
+
+  private dateOnly(dob: string | undefined) {
+    if (!dob) return;
+    return new Date(dob).toISOString().slice(0, 10);
   }
 }
