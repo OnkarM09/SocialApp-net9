@@ -3,6 +3,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -16,23 +17,24 @@ namespace API.Controllers;
 public class UsersController(IUserRepository userRepository, IMapper mapper, IPhotoService photoService) : CustomBaseController
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+    public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
     {
-        IEnumerable<MemberDto> users = await userRepository.GetMembersAsync();
+        PagedList<MemberDto> users = await userRepository.GetMembersAsync(userParams);
+        Response.AddPaginationHeader(users);
         return Ok(users);
     }
 
-    // [HttpGet("{id:int}")]
-    // public async Task<ActionResult<AppUser>> GetUser(int id)
-    // {
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<AppUser>> GetUser(int id)
+    {
 
-    //     AppUser? user = await userRepository.GetUserByIdAsync(id);
-    //     if (user == null)
-    //     {
-    //         return NotFound();
-    //     }
-    //     return Ok(user);
-    // }
+        AppUser? user = await userRepository.GetUserByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        return Ok(user);
+    }
 
     [HttpGet("{username}")]
     public async Task<ActionResult<MemberDto>> GetUser(string username)
@@ -95,6 +97,8 @@ public class UsersController(IUserRepository userRepository, IMapper mapper, IPh
         if (await userRepository.SaveAllAsync()) return NoContent();
         return StatusCode(500, "Failed to set main photo!");
     }
+
+
     [HttpDelete("delete-photo/{photoId}")]
     public async Task<ActionResult> DeletePhoto(int photoId)
     {
