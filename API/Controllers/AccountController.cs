@@ -4,35 +4,35 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    public class AccountController(DataContext context, ITokenService tokenService) : CustomBaseController
+    public class AccountController(DataContext context, ITokenService tokenService, IMapper mapper) : CustomBaseController
     {
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            //using var hmac = new HMACSHA512();
-            //AppUser user = new AppUser
-            //{
-            //    UserName = registerDto.Username.ToLower(),
-            //    PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(registerDto.Password)),
-            //    PasswordSalt = hmac.Key
-            //};
-            //if (!await IsUserExist(registerDto.Username))
-            //{
-            //    await context.Users.AddAsync(user);
-            //    await context.SaveChangesAsync();
-            //    return new UserDto
-            //    {
-            //        Username = user.UserName,
-            //        Token = tokenService.CreateToken(user)
-            //    };
-            //}
-            //return BadRequest("Username already exists");
-            return Ok();
+            using var hmac = new HMACSHA512();
+            var user = mapper.Map<AppUser>(registerDto);
+            user.UserName = registerDto.Username.ToLower();
+            user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasswordSalt = hmac.Key;
+
+            if (!await IsUserExist(registerDto.Username))
+            {
+                await context.Users.AddAsync(user);
+                await context.SaveChangesAsync();
+                return new UserDto
+                {
+                    Username = user.UserName,
+                    Token = tokenService.CreateToken(user),
+                    KnownAs = user.KnownAs
+                };
+            }
+            return BadRequest("Username already exists");
 
         }
 
@@ -63,7 +63,8 @@ namespace API.Controllers
                 {
                     Username = user.UserName,
                     Token = tokenService.CreateToken(user),
-                    PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url
+                    PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url,
+                    KnownAs = user.KnownAs
                 };
             }
             return BadRequest("User not found");
