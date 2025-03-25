@@ -1,32 +1,12 @@
 <div class="row justify-content-center">
-  <div class="mt-3">
+
+
+  <!-- <div class="mt-3">
     <h1>Your matches - {{memberService.paginatedResult()?.pagination?.totalItems}}</h1>
-    <div class="container mt-3">
-      <form #filterForm="ngForm" (ngSubmit)="loadMembers();">
-        <div class="row my-2">
-          <div class="col-md-6">
-            <label for="minAge">Age from: </label>
-            <input type="number" class="form-control ms-1" name="minAge" [(ngModel)]="userParams.minAge">
-          </div>
-          <div class="col-md-6">
-            <label for="maxAge">Age To: </label>
-            <input type="number" class="form-control ms-1" name="maxAge" [(ngModel)]="userParams.maxAge">
-          </div>
-        </div>
-       <div class="row my-2">
-        <div class="col-md-6 ">
-          <label for="gender">Show: </label>
-          <select name="gender" class="form-select ms-1" [(ngModel)]="userParams.gender">
-            @for (gender of genderList; track $index) {
-            <option value="{{gender.value}}">{{gender.display}}</option>
-            }
-          </select>
-        </div>
-       </div>
-       <button class="btn-primary btn" type="submit">Apply Filter</button>
-       <button class="btn btn-danger" (click)="resetFilter()">Reset</button>
-      </form>
-    </div>
+  </div> -->
+  <div class="d-flex justify-content-end w-100 mb-4 align-items-center">
+    <h6 class="m-0 me-3">Showing {{memberService.paginatedResult()?.pagination?.totalItems}} results</h6>
+    <button class="btn btn-primary" (click)="openFilterModal(filterHtml)">Filter</button>
   </div>
   @for (member of memberService.paginatedResult()?.items; track member.id) {
   <div class="col-md-2">
@@ -43,3 +23,40 @@
   </pagination>
 </div>
 }
+<ng-template #filterHtml>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Filter</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #filterForm="ngForm" id="filter-form" (ngSubmit)="loadMembers();">
+      <div class="row my-2">
+        <div class="col-md-6">
+          <label for="minAge">Age from: </label>
+          <input type="number" class="form-control ms-1" name="minAge" [(ngModel)]="userParams.minAge">
+        </div>
+        <div class="col-md-6">
+          <label for="maxAge">Age To: </label>
+          <input type="number" class="form-control ms-1" name="maxAge" [(ngModel)]="userParams.maxAge">
+        </div>
+      </div>
+      <div class="row my-2">
+        <div class="col-md-6 ">
+          <label for="gender">Show: </label>
+          <select name="gender" class="form-select ms-1" [(ngModel)]="userParams.gender">
+            @for (gender of genderList; track $index) {
+            <option value="{{gender.value}}">{{gender.display}}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-outline-primary btn" type="submit" form="filter-form">Apply</button>
+    <button class="btn btn-outline-danger" (click)="resetFilter()">Reset</button>
+  </div>
+
+</ng-template>
