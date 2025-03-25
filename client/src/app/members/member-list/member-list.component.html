@@ -1,4 +1,33 @@
 <div class="row justify-content-center">
+  <div class="mt-3">
+    <h1>Your matches - {{memberService.paginatedResult()?.pagination?.totalItems}}</h1>
+    <div class="container mt-3">
+      <form #filterForm="ngForm" (ngSubmit)="loadMembers();">
+        <div class="row my-2">
+          <div class="col-md-6">
+            <label for="minAge">Age from: </label>
+            <input type="number" class="form-control ms-1" name="minAge" [(ngModel)]="userParams.minAge">
+          </div>
+          <div class="col-md-6">
+            <label for="maxAge">Age To: </label>
+            <input type="number" class="form-control ms-1" name="maxAge" [(ngModel)]="userParams.maxAge">
+          </div>
+        </div>
+       <div class="row my-2">
+        <div class="col-md-6 ">
+          <label for="gender">Show: </label>
+          <select name="gender" class="form-select ms-1" [(ngModel)]="userParams.gender">
+            @for (gender of genderList; track $index) {
+            <option value="{{gender.value}}">{{gender.display}}</option>
+            }
+          </select>
+        </div>
+       </div>
+       <button class="btn-primary btn" type="submit">Apply Filter</button>
+       <button class="btn btn-danger" (click)="resetFilter()">Reset</button>
+      </form>
+    </div>
+  </div>
   @for (member of memberService.paginatedResult()?.items; track member.id) {
   <div class="col-md-2">
     <app-member-card [member]="member"></app-member-card>
@@ -9,9 +38,7 @@
 <div class="d-flex justify-content-center">
   <pagination [boundaryLinks]="true" [totalItems]="memberService.paginatedResult()!.pagination!.totalItems"
     [itemsPerPage]="memberService.paginatedResult()!.pagination!.itemsPerPage" previousText="&lsaquo;"
-    (pageChanged)="pageChangeEvent($event)"
-    [maxSize]="10"
-    nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+    (pageChanged)="pageChangeEvent($event)" [maxSize]="10" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
 
   </pagination>
 </div>
