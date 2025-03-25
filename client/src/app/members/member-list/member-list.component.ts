@@ -7,14 +7,15 @@ import { AccountService } from '../../../services/account.service';
 import { UserParams } from '../../models/userParams';
 import { FormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-member-list',
   standalone: true,
-  imports: [MemberCardComponent, PaginationModule, FormsModule],
+  imports: [MemberCardComponent, PaginationModule, FormsModule,NgSelectModule],
   templateUrl: './member-list.component.html',
   styleUrl: './member-list.component.scss',
-  providers : [BsModalService]
+  providers: [BsModalService]
 })
 export class MemberListComponent implements OnInit {
   private readonly accountService = inject(AccountService);
@@ -24,14 +25,16 @@ export class MemberListComponent implements OnInit {
   userParams = new UserParams(this.accountService.currentUser());
   members: Member[] = [];
   genderList = [{ value: 'male', display: 'Males' }, { value: 'female', display: 'Female' }];
-  modalRef? : BsModalRef;
+  sortingList = [{ value: 'created', display: 'Created' }, { value: 'lastActive', display: 'Last Active' }];
+  modalRef?: BsModalRef;
 
   ngOnInit() {
     this.loadMembers();
   }
 
   loadMembers() {
-    if(this.modalRef){
+    console.log(this.userParams);
+    if (this.modalRef) {
       this.modalRef.hide();
     }
     this.memberService.getMembers(this.userParams);
@@ -49,8 +52,11 @@ export class MemberListComponent implements OnInit {
     }
   }
 
-  openFilterModal(modalTemplate : TemplateRef<void>){
+  openFilterModal(modalTemplate: TemplateRef<void>) {
     this.modalRef = this.modalService.show(modalTemplate);
   }
 
+  sortChange(event : any){
+    this.loadMembers();
+  }
 }

@@ -6,6 +6,7 @@ export class UserParams{
   maxAge = 150;
   pageNumber = 1;
   pageSize = 12;
+  orderBy = 'lastActive'
 
   constructor(user : User | null){
     this.gender = ""
