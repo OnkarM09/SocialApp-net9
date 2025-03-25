@@ -53,6 +53,11 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
         if (userParams.City != null) query = query.Where(u => u.City == userParams.City);
 
 
+        var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
+        var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
+
+        query = query.Where(x => x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
+
         return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(mapper.ConfigurationProvider),
             userParams.PageNumber, userParams.PageSize);
     }
