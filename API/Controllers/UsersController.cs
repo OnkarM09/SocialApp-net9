@@ -19,6 +19,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper, IPh
     [HttpGet]
     public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
     {
+        userParams.CurrentUserName = User.GetUserName();
         PagedList<MemberDto> users = await userRepository.GetMembersAsync(userParams);
         Response.AddPaginationHeader(users);
         return Ok(users);
