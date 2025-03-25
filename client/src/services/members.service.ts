@@ -4,6 +4,7 @@ import { environment } from '../environments/environment';
 import { Member } from '../app/models/member';
 import { Observable } from 'rxjs';
 import { PaginatedResult } from '../app/models/pagination';
+import { UserParams } from '../app/models/userParams';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,16 @@ export class MembersService {
   private readonly baseUrl = environment.apiUrl;
   paginatedResult = signal<PaginatedResult<Member[]> | null>(null);
 
-  getMembers(pageNum: number, pageSiz: number) {
+  getMembers(userParams: UserParams) {
+    let params = this.setPaginationHeaders(userParams.pageNumber, userParams.pageSize);
+    params = params.append('minAge', userParams.minAge);
+    params = params.append('maxAge', userParams.maxAge);
+    params = params.append('gender', userParams.gender);
 
-    return this.http.get<Member[]>(`${this.baseUrl}users`, { observe: 'response', params : {
-      pageNumber : pageNum,
-      pageSize : pageSiz
-    } }).subscribe({
+    return this.http.get<Member[]>(`${this.baseUrl}users`, {
+      observe: 'response',
+      params : params
+    }).subscribe({
       next: response => {
         this.paginatedResult.set({
           items: response.body as Member[],
@@ -26,6 +31,15 @@ export class MembersService {
         });
       }
     });
+  }
+
+  private setPaginationHeaders(pageNum: number, pageSize: number): HttpParams {
+    let params = new HttpParams();
+    if (pageSize && pageNum) {
+      params = params.append('pageNumber', pageNum);
+      params = params.append('pageSize', pageSize);
+    }
+    return params;
   }
 
   getMember(username: string): Observable<Member> {

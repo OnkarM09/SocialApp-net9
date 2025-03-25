@@ -29,7 +29,8 @@ namespace API.Controllers
                 {
                     Username = user.UserName,
                     Token = tokenService.CreateToken(user),
-                    KnownAs = user.KnownAs
+                    KnownAs = user.KnownAs,
+                    Gender = user.Gender
                 };
             }
             return BadRequest("Username already exists");
@@ -63,7 +64,8 @@ namespace API.Controllers
                     Username = user.UserName,
                     Token = tokenService.CreateToken(user),
                     PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url,
-                    KnownAs = user.KnownAs
+                    KnownAs = user.KnownAs,
+                    Gender = user.Gender
                 };
             }
             return BadRequest("User not found");
