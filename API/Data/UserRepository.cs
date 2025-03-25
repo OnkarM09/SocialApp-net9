@@ -5,6 +5,7 @@ using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
@@ -57,6 +58,13 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
         var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
 
         query = query.Where(x => x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
+
+        //Sorting
+        query = userParams.OrderBy switch
+        {
+            "created" => query.OrderBy(x => x.Createdd),
+            _ => query.OrderByDescending(x => x.LastActive) //Default sorting case
+        };
 
         return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(mapper.ConfigurationProvider),
             userParams.PageNumber, userParams.PageSize);
