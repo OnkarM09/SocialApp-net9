@@ -5,25 +5,33 @@ import { Member } from '../app/models/member';
 import { Observable } from 'rxjs';
 import { PaginatedResult } from '../app/models/pagination';
 import { UserParams } from '../app/models/userParams';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MembersService {
   private readonly http = inject(HttpClient);
+  private readonly acountService = inject(AccountService);
   private readonly baseUrl = environment.apiUrl;
   paginatedResult = signal<PaginatedResult<Member[]> | null>(null);
+  user = this.acountService.currentUser();
+  userParams = signal<UserParams>(new UserParams(this.user));
 
-  getMembers(userParams: UserParams) {
-    let params = this.setPaginationHeaders(userParams.pageNumber, userParams.pageSize);
-    params = params.append('minAge', userParams.minAge);
-    params = params.append('maxAge', userParams.maxAge);
-    params = params.append('gender', userParams.gender);
-    params = params.append('orderBy', userParams.orderBy);
+  resetUserParams() {
+    this.userParams.set(new UserParams(this.user));
+  }
+
+  getMembers() {
+    let params = this.setPaginationHeaders(this.userParams().pageNumber, this.userParams().pageSize);
+    params = params.append('minAge', this.userParams().minAge);
+    params = params.append('maxAge', this.userParams().maxAge);
+    params = params.append('gender', this.userParams().gender);
+    params = params.append('orderBy', this.userParams().orderBy);
 
     return this.http.get<Member[]>(`${this.baseUrl}users`, {
       observe: 'response',
-      params : params
+      params: params
     }).subscribe({
       next: response => {
         this.paginatedResult.set({

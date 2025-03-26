@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-end w-100 mb-4 align-items-center">
     <h6 class="m-0 me-3">Showing {{memberService.paginatedResult()?.pagination?.totalItems}} results</h6>
     <button class="btn btn-primary me-4" (click)="openFilterModal(filterHtml)">Filter</button>
-    <ng-select [(ngModel)]="userParams.orderBy" name="orderBy" style="min-width : 118px" placeholder="Sort by" (change)="sortChange($event)">
+    <ng-select [(ngModel)]="memberService.userParams().orderBy" name="orderBy" style="min-width : 118px" placeholder="Sort by" (change)="sortChange($event)">
       @for (sort of sortingList; track $index) {
       <ng-option [value]="sort.value">{{sort.display}}</ng-option>
       }
@@ -34,17 +34,17 @@
       <div class="row my-2">
         <div class="col-md-6">
           <label for="minAge">Age from: </label>
-          <input type="number" class="form-control ms-1" name="minAge" [(ngModel)]="userParams.minAge">
+          <input type="number" class="form-control ms-1" name="minAge" [(ngModel)]="memberService.userParams().minAge">
         </div>
         <div class="col-md-6">
           <label for="maxAge">Age To: </label>
-          <input type="number" class="form-control ms-1" name="maxAge" [(ngModel)]="userParams.maxAge">
+          <input type="number" class="form-control ms-1" name="maxAge" [(ngModel)]="memberService.userParams().maxAge">
         </div>
       </div>
       <div class="row my-2">
         <div class="col-md-6 ">
           <label for="gender">Show: </label>
-          <ng-select [(ngModel)]="userParams.gender" name="gender">
+          <ng-select [(ngModel)]="memberService.userParams().gender" name="gender">
             @for (gender of genderList; track $index) {
             <ng-option [value]="gender.value">{{gender.display}}</ng-option>
             }
