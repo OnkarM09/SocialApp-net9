@@ -18,7 +18,8 @@
 <div class="d-flex justify-content-center">
   <pagination [boundaryLinks]="true" [totalItems]="memberService.paginatedResult()!.pagination!.totalItems"
     [itemsPerPage]="memberService.paginatedResult()!.pagination!.itemsPerPage" previousText="&lsaquo;"
-    (pageChanged)="pageChangeEvent($event)" [maxSize]="10" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+    (pageChanged)="pageChangeEvent($event)" [maxSize]="10" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+    [(ngModel)]="memberService.userParams().pageNumber">
   </pagination>
 </div>
 }
