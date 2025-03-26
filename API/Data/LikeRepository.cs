@@ -1,39 +1,68 @@
 ﻿using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
-    public class LikeRepository : ILikeRepository
+    public class LikeRepository(DataContext context, IMapper mapper) : ILikeRepository
     {
         public void AddLike(UserLike like)
         {
-            throw new NotImplementedException();
+            context.Likes.Add(like);
         }
 
         public void DeleteLike(UserLike like)
         {
-            throw new NotImplementedException();
+            context.Likes.Remove(like);
         }
 
-        public Task<IEnumerable<int>> GetCurretUserLikeIds(int curretUserId)
+        public async Task<IEnumerable<int>> GetCurretUserLikeIds(int curretUserId)
         {
-            throw new NotImplementedException();
+            return await context.Likes
+                .Where(u => u.SourceUserId == curretUserId)
+                .Select(u => u.TargetUserId)
+                .ToListAsync();
         }
 
-        public Task<UserLike?> GetUserLike(int sourceUserId, int targetUserId)
+        public async Task<UserLike?> GetUserLike(int sourceUserId, int targetUserId)
         {
-            throw new NotImplementedException();
+            return await context.Likes.FindAsync(sourceUserId, targetUserId);
         }
 
-        public Task<IEnumerable<MemberDto>> GetUserLikes(string predecate, int userId)
+        public async Task<IEnumerable<MemberDto>> GetUserLikes(string predicate, int userId)
         {
-            throw new NotImplementedException();
+            var likes = context.Likes.AsQueryable();
+
+            switch (predicate)
+            {
+                case "liked":
+                    return await likes
+                        .Where(u => u.SourceUserId == userId)
+                        .Select(x => x.TargetUser)
+                        .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
+                        .ToListAsync();
+                case "likedBy":
+                    return await likes
+                       .Where(u => u.TargetUserId == userId)
+                       .Select(x => x.SourceUser)
+                       .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
+                       .ToListAsync();
+                default:
+                    var likeIds = await GetCurretUserLikeIds(userId);
+                    return await likes
+                        .Where(x => x.SourceUserId == userId && likeIds.Contains(x.SourceUserId))
+                        .Select(x => x.SourceUser)
+                        .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
+                       .ToListAsync();
+            }
         }
 
-        public Task<bool> SaveChanges()
+        public async Task<bool> SaveChanges()
         {
-            throw new NotImplementedException();
+            return await context.SaveChangesAsync() > 0;
         }
     }
 }
