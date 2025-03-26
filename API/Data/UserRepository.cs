@@ -63,6 +63,10 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
         query = userParams.OrderBy switch
         {
             "created" => query.OrderBy(x => x.Createdd),
+            "age" => query.OrderByDescending(x => x.DateOfBirth),
+            "city" => query.OrderBy(x => x.City),
+            "country" => query.OrderBy(x => x.Country),
+            "name" => query.OrderBy(x => x.KnownAs),
             _ => query.OrderByDescending(x => x.LastActive) //Default sorting case
         };
 
