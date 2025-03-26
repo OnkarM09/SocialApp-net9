@@ -10,13 +10,12 @@ namespace API.Helpers
         {
             var resultContext = await next();
             if (context.HttpContext.User.Identity?.IsAuthenticated != true) return;
-            var username = resultContext.HttpContext.User.GetUserName();
-            if (username == null) return;
+            var userId = resultContext.HttpContext.User.GetUserId();
 
             //Creating scoped instance of UserRepository services as we are creating it when action
             //filter is being executed
             var repo = resultContext.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-            var user = await repo.GetUserByUserNameAsync(username);
+            var user = await repo.GetUserByIdAsync(userId);
             if (user == null) return;
 
             user.LastActive = DateTime.UtcNow;
