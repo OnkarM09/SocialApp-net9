@@ -9,6 +9,7 @@ import { provideToastr } from 'ngx-toastr';
 import { errorInterceptor } from './_interceptros/error.interceptor';
 import { jwtInterceptor } from './_interceptros/jwt.interceptor';
 import { loadingInterceptor } from './_interceptros/loading.interceptor';
+import { TimeagoModule } from 'ngx-timeago';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes),
@@ -20,6 +21,6 @@ export const appConfig: ApplicationConfig = {
     progressBar: true,
     progressAnimation: 'decreasing'
   }),
-  importProvidersFrom(NgxSpinnerModule)
+  importProvidersFrom(NgxSpinnerModule, TimeagoModule.forRoot())
   ]
 };
