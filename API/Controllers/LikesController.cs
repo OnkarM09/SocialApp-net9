@@ -1,6 +1,7 @@
 ﻿using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ namespace API.Controllers
             if (sourceUserId == targetUserId) return BadRequest("Cannot like yourself");
 
             var existingLike = await likesRepository.GetUserLike(sourceUserId, targetUserId);
-         
+
             if (existingLike == null)
             {
                 var like = new UserLike
@@ -41,9 +42,11 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> UserLikes(string predicate)
+        public async Task<ActionResult<IEnumerable<MemberDto>>> UserLikes([FromQuery] LikesParams likesParams)
         {
-            var users = await likesRepository.GetUserLikes(predicate, User.GetUserId());
+            likesParams.UserId = User.GetUserId();
+            var users = await likesRepository.GetUserLikes(likesParams);
+            Response.AddPaginationHeader(users);
             return Ok(users);
         }
     }
