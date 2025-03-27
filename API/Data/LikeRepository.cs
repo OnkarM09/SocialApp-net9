@@ -53,7 +53,7 @@ namespace API.Data
                 default:
                     var likeIds = await GetCurretUserLikeIds(userId);
                     return await likes
-                        .Where(x => x.SourceUserId == userId && likeIds.Contains(x.SourceUserId))
+                        .Where(x => x.TargetUserId == userId && likeIds.Contains(x.SourceUserId))
                         .Select(x => x.SourceUser)
                         .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
                        .ToListAsync();
