@@ -1,6 +1,7 @@
 ﻿using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +37,15 @@ namespace API.Controllers
             messageRepository.AddMessage(message);
             if (await messageRepository.SaveAllAsync()) return Ok(mapper.Map<MessageDto>(message));
             return StatusCode(500, "Error while adding message! Please try again later.");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageForUser([FromQuery] MessageParams messageParams)
+        {
+            messageParams.UserName = User.GetUserName();
+            var messages = await messageRepository.GetMessageForUser(messageParams);
+            Response.AddPaginationHeader(messages);
+            return messages;
         }
     }
 }
