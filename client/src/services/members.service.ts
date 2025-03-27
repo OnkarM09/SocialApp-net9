@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Member } from '../app/models/member';
@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { PaginatedResult } from '../app/models/pagination';
 import { UserParams } from '../app/models/userParams';
 import { AccountService } from './account.service';
+import { setPaginationHeaders, setPaginationResponse } from '../app/helpers/paginationHeaders';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class MembersService {
   }
 
   getMembers() {
-    let params = this.setPaginationHeaders(this.userParams().pageNumber, this.userParams().pageSize);
+    let params = setPaginationHeaders(this.userParams().pageNumber, this.userParams().pageSize);
     params = params.append('minAge', this.userParams().minAge);
     params = params.append('maxAge', this.userParams().maxAge);
     params = params.append('gender', this.userParams().gender);
@@ -33,23 +34,10 @@ export class MembersService {
       observe: 'response',
       params: params
     }).subscribe({
-      next: response => {
-        this.paginatedResult.set({
-          items: response.body as Member[],
-          pagination: JSON.parse(response.headers.get('Pagination')!)
-        });
-      }
+      next: response => setPaginationResponse(response, this.paginatedResult)
     });
   }
 
-  private setPaginationHeaders(pageNum: number, pageSize: number): HttpParams {
-    let params = new HttpParams();
-    if (pageSize && pageNum) {
-      params = params.append('pageNumber', pageNum);
-      params = params.append('pageSize', pageSize);
-    }
-    return params;
-  }
 
   getMember(username: string): Observable<Member> {
     return this.http.get<Member>(`${this.baseUrl}users/${username}`);

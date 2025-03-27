@@ -3,7 +3,6 @@ import { MembersService } from '../../../services/members.service';
 import { Member } from '../../models/member';
 import { MemberCardComponent } from '../member-card/member-card.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { UserParams } from '../../models/userParams';
 import { FormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgSelectModule } from '@ng-select/ng-select';
