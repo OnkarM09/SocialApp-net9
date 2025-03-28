@@ -47,5 +47,12 @@ namespace API.Controllers
             Response.AddPaginationHeader(messages);
             return messages;
         }
+
+        [HttpGet("thread/{username}")]
+        public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username)
+        {
+            var currentUserName = User.GetUserName();
+            return Ok(await messageRepository.GetMessageThread(currentUserName, username));
+        }
     }
 }
