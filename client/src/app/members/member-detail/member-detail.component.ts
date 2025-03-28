@@ -9,11 +9,12 @@ import { TimeagoModule } from 'ngx-timeago';
 import { MemberMessagesComponent } from "../member-messages/member-messages.component";
 import { Message } from '../../models/message';
 import { MessageService } from '../../../services/message.service';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @Component({
   selector: 'app-member-detail',
   standalone: true,
-  imports: [DatePipe, TabsModule, GalleryModule, TimeagoModule, MemberMessagesComponent],
+  imports: [DatePipe, TabsModule, GalleryModule, TimeagoModule, MemberMessagesComponent, TooltipModule],
   templateUrl: './member-detail.component.html',
   styleUrl: './member-detail.component.scss'
 })

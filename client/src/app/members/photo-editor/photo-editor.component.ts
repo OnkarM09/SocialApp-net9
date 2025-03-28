@@ -9,11 +9,12 @@ import { MembersService } from '../../../services/members.service';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal from 'sweetalert2';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @Component({
   selector: 'app-photo-editor',
   standalone: true,
-  imports: [NgIf, NgFor, NgClass, NgStyle, FileUploadModule, DecimalPipe, SweetAlert2Module],
+  imports: [NgIf, NgFor, NgClass, NgStyle, FileUploadModule, DecimalPipe, SweetAlert2Module, TooltipModule],
   templateUrl: './photo-editor.component.html',
   styleUrl: './photo-editor.component.scss',
   providers: [BsModalService]

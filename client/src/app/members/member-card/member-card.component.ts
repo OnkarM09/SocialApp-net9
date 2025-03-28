@@ -2,11 +2,12 @@ import { Component, computed, inject, input } from '@angular/core';
 import { Member } from '../../models/member';
 import { RouterLink } from '@angular/router';
 import { LikesService } from '../../../services/likes.service';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @Component({
   selector: 'app-member-card',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TooltipModule],
   templateUrl: './member-card.component.html',
   styleUrl: './member-card.component.scss'
 })

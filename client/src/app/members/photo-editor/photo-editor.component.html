@@ -80,9 +80,9 @@
   <div class="col-md-4 mt-4">
     <img src="{{photo.url}}" alt="{{memberInput().knownAs}}' profile" class="img-thumbnail mb-1">
     <div class="d-flex justify-content-center mt-2">
-      <button class="btn btn-sm btn-success me-3" (click)="setMainPhoto(photo)" [disabled]="photo.isMain">
+      <button class="btn btn-sm btn-success me-3" (click)="setMainPhoto(photo)" [disabled]="photo.isMain" tooltip="Set as main" placement="top" container="body" [delay]="500">
         <i class="fa fa-camera" aria-hidden="true"></i></button>
-      <button class="btn btn-danger btn-sm" [disabled]="photo.isMain" (click)="deletePhotoConfirmation(photo)">
+      <button class="btn btn-danger btn-sm" [disabled]="photo.isMain" (click)="deletePhotoConfirmation(photo)" tooltip="Delete" placement="top" container="body" [delay]="500">
         <i class="fa fa-trash"></i>
       </button>
     </div>
