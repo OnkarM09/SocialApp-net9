@@ -17,6 +17,7 @@ export class RegisterComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
 
+  loginToggle = output<boolean>();
   cancelRegistration = output<boolean>();
   registerForm: FormGroup = new FormGroup({});
   maxDate = new Date();
@@ -59,13 +60,18 @@ export class RegisterComponent implements OnInit {
         this.router.navigateByUrl('/members');
       },
       error: (err) => {
-        this.validationErrors = err;
+        console.log(err)
+        this.validationErrors?.push(err);
       }
     });
   }
 
   cancel() {
     this.cancelRegistration.emit(false);
+  }
+
+  toggleLogin() {
+    this.loginToggle.emit(true);
   }
 
   private dateOnly(dob: string | undefined) {

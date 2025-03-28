@@ -1,0 +1,32 @@
+<div class="row justify-content-center">
+  <div class="col-md-4">
+    <form class="ms-auto" #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off">
+      <h2 class="text-center text-primary">Login</h2>
+      <label for="username" class="float-start">Username</label>
+      <div class="mb-4 input-group">
+        <div class="input-group-text">
+          <i class="fa fa-user" aria-hidden="true"></i>
+        </div>
+        <input class="form-control" required name="username" placeholder="Please type here" [(ngModel)]="model.username" />
+      </div>
+      <label for="password" class="float-start">Password</label>
+        <div class="input-group mb-3">
+          <div class="input-group-text">
+            <i class="fa fa-lock" aria-hidden="true"></i>
+          </div>
+          <input class="form-control" #passwordField required placeholder="Please type here" type="password" name="password" [(ngModel)]="model.password" />
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" (change)="showPassword(passwordField);">
+          <label class="form-check-label float-start mb-4" for="flexCheckDefault">
+            Show Password
+          </label>
+        </div>
+      <button class="btn btn-success w-100" type="submit" [disabled]="!loginForm.valid">Login</button>
+    </form>
+      <p class="mt-4">Don't have an account? <strong><a class="text-primary" href="javascript:void(0)" (click)="toggleRegister()">Register</a></strong></p>
+  </div>
+</div>
+
+
+
