@@ -65,7 +65,7 @@ namespace API.Controllers
             var message = await messageRepository.GetMessage(id);
             if (message == null) return BadRequest("Can't delete this message");
 
-            if (userName != message.SenderUsername || message.RecipientUsername != userName)
+            if (userName != message.SenderUsername && message.RecipientUsername != userName)
             {
                 return Forbid("You are not authorized to deleted this message");
             }
