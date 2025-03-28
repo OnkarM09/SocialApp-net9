@@ -4,11 +4,14 @@ using API.Extensions;
 using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Sockets;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class MessagesController(
         IMessageRepository messageRepository,
         IUserRepository userRepository,
@@ -53,6 +56,29 @@ namespace API.Controllers
         {
             var currentUserName = User.GetUserName();
             return Ok(await messageRepository.GetMessageThread(currentUserName, username));
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteMessage(int id)
+        {
+            var userName = User.GetUserName();
+            var message = await messageRepository.GetMessage(id);
+            if (message == null) return BadRequest("Can't delete this message");
+
+            if (userName != message.SenderUsername || message.RecipientUsername != userName)
+            {
+                return Forbid("You are not authorized to deleted this message");
+            }
+            if (message.SenderUsername == userName) message.SenderDeleted = true;
+            if (message.RecipientUsername == userName) message.RecipientDeleted = true;
+
+            if (message is { SenderDeleted: true, RecipientDeleted: true })
+            {
+                messageRepository.DeleteMessage(message);
+            }
+
+            if (await messageRepository.SaveAllAsync()) return Ok();
+            return StatusCode(500, "Internal server error while deleting the message");
         }
     }
 }
