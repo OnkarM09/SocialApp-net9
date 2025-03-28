@@ -34,6 +34,8 @@
   <div class="card-footer">
     <form #messageForm="ngForm" (ngSubmit)="sendMessage(messageForm)">
       <div class="input-group">
+
+        <!-- <button class="btn btn-primary" type="button" (click)="toggledEmoji = !toggledEmoji">Emoji</button> -->
         <input type="text" class="form-control input-sm" placeholder="Send a private message" name="messageContent" [(ngModel)]="messageContent" required>
         <div class="input-group-append">
           <button class="btn btn-primary" type="submit" [disabled]="!messageForm.valid">Send</button>
@@ -42,4 +44,7 @@
     </form>
   </div>
 </div>
+@if(toggledEmoji){
+  <emoji-mart title="Pick your emoji…" emoji="point_up" (emojiClick)="addEmoji($event)"></emoji-mart>
+}
 
