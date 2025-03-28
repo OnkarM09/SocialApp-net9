@@ -26,9 +26,9 @@
       <td>
         <div>
           <img width="40" class="me-2 rounded-circle"
-            [src]="container == 'Outbox' ? (message.recipientPhotoUrl || './../../assets/user.png') : (message.senderPhotoUrl || './../../assets/user.png')"
+            [src]="isOutbox ? (message.recipientPhotoUrl || './../../assets/user.png') : (message.senderPhotoUrl || './../../assets/user.png')"
             alt="User">
-          <strong>{{container == 'Outbox'? message.recipientUsername : message.senderUsername}}</strong>
+          <strong>{{isOutbox ? message.recipientUsername : message.senderUsername}}</strong>
         </div>
       </td>
       <td>{{message.messageSent | timeago}}</td>

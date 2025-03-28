@@ -20,6 +20,7 @@ export class MessagesComponent implements OnInit{
   container : string = "Inbox";
   pageNumber = 1;
   pageSize  = 5;
+  isOutbox : boolean = this.container == 'Outbox';
   messageTypeList = [
     {
       value : 'Unread',
@@ -33,7 +34,8 @@ export class MessagesComponent implements OnInit{
       value: 'Outbox',
       display : 'Outbox'
     }
-  ]
+  ];
+
   ngOnInit(): void {
     this.loadMessages();
   }
