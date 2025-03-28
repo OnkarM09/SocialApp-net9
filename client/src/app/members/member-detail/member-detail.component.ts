@@ -22,15 +22,36 @@ export class MemberDetailComponent implements OnInit {
   private readonly messageService = inject(MessageService);
   private readonly route = inject(ActivatedRoute);
 
-  @ViewChild('memberTabs') memberTabs? : TabsetComponent;
+  @ViewChild('memberTabs', {static : true}) memberTabs? : TabsetComponent;
   activeTab? :TabDirective;
   messages: Message[] = [];
 
-  member?: Member;
+  member: Member = {} as Member;
   images: GalleryItem[] = [];
 
   ngOnInit(): void {
-    this.loadMember();
+    this.route.data.subscribe({
+      next : data =>{
+        this.member = data['member'];
+        this.member && this.member.photos.forEach(photo => {
+          this.images.push(new ImageItem({ src: photo.url, thumb: photo.url }))
+        });
+      }
+    });
+    this.route.queryParams.subscribe({
+      next : (params) =>{
+        params['tab'] && this.selectTab(params['tab'])
+      }
+    })
+  }
+
+  selectTab(heading: string) : void{
+    if(this.memberTabs){
+      const messageTab = this.memberTabs.tabs.find(tab => tab.heading == heading);
+      if(messageTab){
+        messageTab.active = true;
+      }
+    }
   }
 
   onTabActivated(data : TabDirective){
@@ -42,16 +63,4 @@ export class MemberDetailComponent implements OnInit {
     }
   }
 
-  loadMember() {
-    const userName = this.route.snapshot.paramMap.get("username");
-    if (!userName) return;
-    this.memberService.getMember(userName).subscribe({
-      next: (member: Member) => {
-        this.member = member;
-        member.photos.forEach(photo => {
-          this.images.push(new ImageItem({ src: photo.url, thumb: photo.url }))
-        });
-      }
-    });
-  }
 }

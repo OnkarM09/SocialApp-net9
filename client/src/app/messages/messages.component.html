@@ -21,7 +21,7 @@
   </thead>
   <tbody>
     @for (message of messageService.paginatedResult()?.items; track message.id) {
-    <tr routerLink="{{getRoute(message)}}" class="align-middle">
+    <tr class="align-middle" routerLink="{{getRoute(message)}}" [queryParams]="{tab : 'Messages'}">
       <td>{{message.content}}</td>
       <td>
         <div>
