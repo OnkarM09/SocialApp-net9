@@ -17,7 +17,7 @@ export class MessageService {
 
   getMessages(pageNumber: number, pageSize: number, container: string) {
     let params = setPaginationHeaders(pageNumber, pageSize);
-    params.append("Container", container);
+    params = params.append("Container", container);
     return this.http.get<Message[]>(`${this.baseUrl}messages`, {
       observe: 'response', params
     }).subscribe({

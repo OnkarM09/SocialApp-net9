@@ -1,3 +1,52 @@
-@for (message of messageService.paginatedResult()?.items; track message.id) {
-  <p>{{message.content}}</p>
+<div class="container mt-3">
+  <label for="gender">Show: </label>
+  <ng-select (change)="messageTypeChange($event)" [(ngModel)]="container">
+    @for (type of messageTypeList; track $index) {
+    <ng-option [value]="type.value">{{type.display}}</ng-option>
+    }
+  </ng-select>
+</div>
+
+@if(!messageService.paginatedResult()?.pagination?.totalItems){
+<h3>No messages!</h3>
+}@else {
+<table class="table table-hover mt-3 table-responsive" style="cursor:pointer">
+  <thead class="table-primary">
+    <tr>
+      <th style="width: 40%;">Message</th>
+      <th style="width: 20%;">From/To</th>
+      <th style="width: 20%;">Sent/Recieved</th>
+      <th style="width: 20%;"></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (message of messageService.paginatedResult()?.items; track message.id) {
+    <tr routerLink="{{getRoute(message)}}" class="align-middle">
+      <td>{{message.content}}</td>
+      <td>
+        <div>
+          <img width="40" class="me-2 rounded-circle"
+            [src]="container == 'Outbox' ? (message.recipientPhotoUrl || './../../assets/user.png') : (message.senderPhotoUrl || './../../assets/user.png')"
+            alt="User">
+          <strong>{{container == 'Outbox'? message.recipientUsername : message.senderUsername}}</strong>
+        </div>
+      </td>
+      <td>{{message.messageSent | timeago}}</td>
+      <td>
+        <button class="btn btn-danger">Delete</button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+}
+
+@if(messageService.paginatedResult()?.pagination?.totalItems){
+<div class="d-flex justify-content-center mt-3">
+  <pagination [boundaryLinks]="true" [totalItems]="messageService.paginatedResult()!.pagination!.totalItems"
+    [itemsPerPage]="messageService.paginatedResult()!.pagination!.itemsPerPage" previousText="&lsaquo;"
+    (pageChanged)="pagedChangeEvent($event)" [maxSize]="10" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+    [(ngModel)]="pageNumber">
+  </pagination>
+</div>
 }
