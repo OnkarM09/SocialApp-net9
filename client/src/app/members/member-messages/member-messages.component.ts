@@ -1,11 +1,12 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { Message } from '../../models/message';
 import { MessageService } from '../../../services/message.service';
+import { TimeagoModule } from 'ngx-timeago';
 
 @Component({
   selector: 'app-member-messages',
   standalone: true,
-  imports: [],
+  imports: [TimeagoModule],
   templateUrl: './member-messages.component.html',
   styleUrl: './member-messages.component.scss'
 })
