@@ -18,6 +18,7 @@ public class TokenService(IConfiguration config) : ITokenService
         {
             throw new Exception("Your token key needs to be longer");
         }
+        if (user.UserName == null) throw new Exception("No username for user");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
         var claims = new List<Claim>{
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),

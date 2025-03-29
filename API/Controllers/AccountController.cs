@@ -36,7 +36,7 @@ namespace API.Controllers
 
         private async Task<bool> IsUserExist(string userName)
         {
-            return await context.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
+            return await context.Users.AnyAsync(x => x.NormalizedUserName == userName.ToUpper());
         }
 
         [HttpPost("login")]
@@ -47,8 +47,9 @@ namespace API.Controllers
             {
                 AppUser? user = await context.Users
                                     .Include(p => p.Photos)
-                                        .FirstOrDefaultAsync(x => x.UserName.ToLower() == loginUser.Username.ToLower());
-               
+                                        .FirstOrDefaultAsync(x => x.NormalizedUserName == loginUser.Username.ToUpper());
+
+                if (user == null || user.UserName == null) return Unauthorized("Invalid Username");
                 //Pass the JWT token
                 return new UserDto
                 {
