@@ -41,6 +41,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper, IPh
     public async Task<ActionResult<MemberDto>> GetUser(string username)
     {
         MemberDto? user = await userRepository.GetMemberAsync(username);
+        if (user == null) return NotFound();
         return Ok(user);
     }
 

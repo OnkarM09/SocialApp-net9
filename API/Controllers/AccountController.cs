@@ -5,38 +5,37 @@ using API.DTOs;
 using API.Entities;
 using API.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    public class AccountController(DataContext context, ITokenService tokenService, IMapper mapper) : CustomBaseController
+    public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IMapper mapper) : CustomBaseController
     {
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            using var hmac = new HMACSHA512();
             var user = mapper.Map<AppUser>(registerDto);
             user.UserName = registerDto.Username.ToLower();
 
-            if (!await IsUserExist(registerDto.Username))
+            if (await IsUserExist(registerDto.Username)) return BadRequest("Username already taken");
+
+            var result = await userManager.CreateAsync(user, registerDto.Password);
+            if (!result.Succeeded) return BadRequest("Cannot create a user");
+
+            return new UserDto
             {
-                await context.Users.AddAsync(user);
-                await context.SaveChangesAsync();
-                return new UserDto
-                {
-                    Username = user.UserName,
-                    Token = tokenService.CreateToken(user),
-                    KnownAs = user.KnownAs,
-                    Gender = user.Gender
-                };
-            }
-            return BadRequest("Username already exists");
+                Username = user.UserName,
+                Token = tokenService.CreateToken(user),
+                KnownAs = user.KnownAs,
+                Gender = user.Gender
+            };
         }
 
         private async Task<bool> IsUserExist(string userName)
         {
-            return await context.Users.AnyAsync(x => x.NormalizedUserName == userName.ToUpper());
+            return await userManager.Users.AnyAsync(x => x.NormalizedUserName == userName.ToUpper());
         }
 
         [HttpPost("login")]
@@ -45,11 +44,13 @@ namespace API.Controllers
             bool isUser = await IsUserExist(loginUser.Username);
             if (isUser)
             {
-                AppUser? user = await context.Users
+                AppUser? user = await userManager.Users
                                     .Include(p => p.Photos)
                                         .FirstOrDefaultAsync(x => x.NormalizedUserName == loginUser.Username.ToUpper());
 
                 if (user == null || user.UserName == null) return Unauthorized("Invalid Username");
+                var result = await userManager.CheckPasswordAsync(user,loginUser.Password);
+                if (!result) return Unauthorized("Password is incorrect");
                 //Pass the JWT token
                 return new UserDto
                 {

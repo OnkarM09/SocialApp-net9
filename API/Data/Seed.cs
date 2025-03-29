@@ -22,6 +22,7 @@ namespace API.Data
             if (users == null) return;
             foreach (AppUser user in users)
             {
+                user.UserName = user.UserName!.ToLower();
                 await userManager.CreateAsync(user, "Pa$$w0rd");
             }
         }
