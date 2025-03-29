@@ -1,16 +1,27 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    public class AdminController : CustomBaseController
+    public class AdminController(UserManager<AppUser> userManager) : CustomBaseController
     {
         [Authorize(Policy = "RequiredAdminRole")]
         [HttpGet("users-with-roles")]
-        public ActionResult GetUserRoles()
+        public async Task<ActionResult> GetUserRoles()
         {
-            return Ok("Only admins can see this");
+            var users = await userManager.Users.OrderBy(x => x.UserName)
+                .Select(x => new
+                {
+                    x.Id,
+                    Username = x.UserName,
+                    Roles = x.UserRoles.Select(r => r.Role.Name).ToList()
+                }).ToListAsync();
+
+            return Ok(users);
         }
 
         [Authorize(Policy = "ModeratePhotoRole")]
