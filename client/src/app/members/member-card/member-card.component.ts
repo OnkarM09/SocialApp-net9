@@ -3,6 +3,7 @@ import { Member } from '../../models/member';
 import { RouterLink } from '@angular/router';
 import { LikesService } from '../../../services/likes.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { PresenceService } from '../../../services/presence.service';
 
 @Component({
   selector: 'app-member-card',
@@ -13,9 +14,11 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 })
 export class MemberCardComponent {
   private readonly likeService = inject(LikesService);
+  private readonly presenceService = inject(PresenceService);
 
   member = input.required<Member>();
 
+  isOnline = computed(()=> this.presenceService.onlineUsers().includes(this.member().username))
   hasLiked = computed(() => this.likeService.likeIds().includes(this.member().id));
 
   toggleLike() {
