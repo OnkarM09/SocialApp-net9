@@ -13,6 +13,7 @@ export class AccountService {
   private readonly likeService = inject(LikesService);
   private readonly baseUrl = environment.apiUrl;
   currentUser = signal<User | null>(null);
+
   roles = computed(() => {
     const user = this.currentUser();
     if (user?.token) {
