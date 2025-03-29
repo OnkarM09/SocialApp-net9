@@ -11,6 +11,7 @@ import { jwtInterceptor } from './_interceptros/jwt.interceptor';
 import { loadingInterceptor } from './_interceptros/loading.interceptor';
 import { TimeagoModule } from 'ngx-timeago';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes),
@@ -22,6 +23,6 @@ export const appConfig: ApplicationConfig = {
     progressBar: true,
     progressAnimation: 'decreasing'
   }),
-  importProvidersFrom(NgxSpinnerModule, TimeagoModule.forRoot(), TooltipModule.forRoot())
+  importProvidersFrom(NgxSpinnerModule, TimeagoModule.forRoot(), TooltipModule.forRoot(), ModalModule.forRoot())
   ]
 };
