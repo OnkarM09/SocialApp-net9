@@ -28,6 +28,9 @@ namespace API.Extensions
             services.AddScoped<LogUserActivity>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+
+            //Adding signalR
+            services.AddSignalR();
             return services;
         }
     }
