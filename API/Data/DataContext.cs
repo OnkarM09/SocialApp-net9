@@ -13,6 +13,7 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<AppUser,
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<AppUser>()
             .HasMany(ur => ur.UserRoles)
@@ -25,8 +26,7 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<AppUser,
            .WithOne(u => u.Role)
            .HasForeignKey(ur => ur.RoleId)
            .IsRequired();
-
-        base.OnModelCreating(modelBuilder);
+    
         modelBuilder.Entity<UserLike>()
             .HasKey(k => new { k.SourceUserId, k.TargetUserId });
 
