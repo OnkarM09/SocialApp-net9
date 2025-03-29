@@ -18,8 +18,6 @@ namespace API.Controllers
             using var hmac = new HMACSHA512();
             var user = mapper.Map<AppUser>(registerDto);
             user.UserName = registerDto.Username.ToLower();
-            user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(registerDto.Password));
-            user.PasswordSalt = hmac.Key;
 
             if (!await IsUserExist(registerDto.Username))
             {
@@ -50,14 +48,7 @@ namespace API.Controllers
                 AppUser? user = await context.Users
                                     .Include(p => p.Photos)
                                         .FirstOrDefaultAsync(x => x.UserName.ToLower() == loginUser.Username.ToLower());
-                using var hmac = new HMACSHA512(user.PasswordSalt);
-                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginUser.Password));
-                int len = computedHash.Length;
-                for (int i = 0; i < len; i++)
-                {
-                    if (computedHash[i] != user.PasswordHash[i]) return BadRequest("Invalid Password");
-                }
-
+               
                 //Pass the JWT token
                 return new UserDto
                 {
