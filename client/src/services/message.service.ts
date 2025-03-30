@@ -31,18 +31,11 @@ export class MessageService {
       .withAutomaticReconnect()
       .build()
 
-    this.hubConnection.start().catch(err => {
-      console.log(err);
-    });
+    this.hubConnection.start().catch(err => console.log(err));
 
-    this.hubConnection.on('RecievedMessageThread', messages => {
-      this.messageThread.set(messages)
-    });
+    this.hubConnection.on('RecievedMessageThread', messages => this.messageThread.set(messages));
 
-    this.hubConnection.on('NewMessage', newMsg => {
-      console.log(newMsg)
-      this.messageThread.update((currentMessages) => [...currentMessages, newMsg])
-    });
+    this.hubConnection.on('NewMessage', newMsg => this.messageThread.update((currentMessages) => [...currentMessages, newMsg]));
   }
 
   stopHubConnection() {
