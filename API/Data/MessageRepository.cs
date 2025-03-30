@@ -64,12 +64,11 @@ namespace API.Data
         public async Task<IEnumerable<MessageDto>> GetMessageThread(string senderUserName, string recipientUserName)
         {
             var messages = await context.Messages
-                 .Include(x => x.Sender).ThenInclude(x => x.Photos)
-                 .Include(x => x.Recipient).ThenInclude(x => x.Photos)
                  .Where(
                      x => x.RecipientUsername == senderUserName && x.RecipientDeleted == false && x.SenderUsername == recipientUserName
                      || x.SenderUsername == senderUserName && x.SenderDeleted == false && x.RecipientUsername == recipientUserName)
                  .OrderBy(x => x.MessageSent)
+                 .ProjectTo<MessageDto>(mapper.ConfigurationProvider)
                  .ToListAsync();
             var unreadMessages = messages.Where(x => x.DateRead == null && x.RecipientUsername == senderUserName).ToList();
             if (unreadMessages.Count != 0)
@@ -77,7 +76,7 @@ namespace API.Data
                 unreadMessages.ForEach(x => x.DateRead = DateTime.UtcNow);
                 await context.SaveChangesAsync();
             }
-            return mapper.Map<IEnumerable<MessageDto>>(messages);
+            return messages;
         }
 
         public void RemoveConnection(Connection connection)
