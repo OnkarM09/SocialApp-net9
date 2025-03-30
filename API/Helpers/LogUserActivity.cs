@@ -14,12 +14,12 @@ namespace API.Helpers
 
             //Creating scoped instance of UserRepository services as we are creating it when action
             //filter is being executed
-            var repo = resultContext.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-            var user = await repo.GetUserByIdAsync(userId);
+            var unitOfWork = resultContext.HttpContext.RequestServices.GetRequiredService<IUnitofWork>();
+            var user = await unitOfWork.UserRepository.GetUserByIdAsync(userId);
             if (user == null) return;
 
             user.LastActive = DateTime.UtcNow;
-            await repo.SaveAllAsync();
+            await unitOfWork.Complete();
         }
     }
 }

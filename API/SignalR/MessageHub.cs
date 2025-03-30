@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace API.SignalR
 {
-    public class MessageHub(IMessageRepository messageRepository, IUserRepository userRepository, IMapper mapper, IHubContext<PresenceHub> presenceHub) : Hub
+    public class MessageHub(IUnitofWork unitofWork, IMapper mapper, IHubContext<PresenceHub> presenceHub) : Hub
     {
         public override async Task OnConnectedAsync()
         {
@@ -25,7 +25,10 @@ namespace API.SignalR
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
             await AddToGroup(groupName);
 
-            var messages = await messageRepository.GetMessageThread(Context.User.GetUserName(), otherUser!);
+            var messages = await unitofWork.MessageRepository.GetMessageThread(Context.User.GetUserName(), otherUser!);
+
+            if (unitofWork.HasChanges()) await unitofWork.Complete();
+
             await Clients.Group(groupName).SendAsync("RecievedMessageThread", messages);
         }
 
@@ -42,8 +45,8 @@ namespace API.SignalR
             if (userName == createMessageDto.RecipientUserName.ToLower())
                 throw new HubException("You cannot message yourself");
 
-            var sender = await userRepository.GetUserByUserNameAsync(userName);
-            var recipient = await userRepository.GetUserByUserNameAsync(createMessageDto.RecipientUserName);
+            var sender = await unitofWork.UserRepository.GetUserByUserNameAsync(userName);
+            var recipient = await unitofWork.UserRepository.GetUserByUserNameAsync(createMessageDto.RecipientUserName);
 
             if (sender == null || recipient == null || sender.UserName == null || recipient.UserName == null)
                 throw new Exception("Cannot send message at this time");
@@ -58,7 +61,7 @@ namespace API.SignalR
             };
 
             var groupName = GetGroupName(sender.UserName, recipient.UserName);
-            var group = await messageRepository.GetMessageGroup(groupName);
+            var group = await unitofWork.MessageRepository.GetMessageGroup(groupName);
 
             if (group != null && group.Connections.Any(x => x.UserName == recipient.UserName))
             {
@@ -77,8 +80,8 @@ namespace API.SignalR
                 }
             }
 
-            messageRepository.AddMessage(message);
-            if (await messageRepository.SaveAllAsync())
+            unitofWork.MessageRepository.AddMessage(message);
+            if (await unitofWork.Complete())
             {
                 await Clients.Group(groupName).SendAsync("NewMessage", mapper.Map<MessageDto>(message));
             }
@@ -87,24 +90,24 @@ namespace API.SignalR
         private async Task<bool> AddToGroup(string groupName)
         {
             var username = Context.User?.GetUserName() ?? throw new Exception("Cannot get username");
-            var group = await messageRepository.GetMessageGroup(groupName);
+            var group = await unitofWork.MessageRepository.GetMessageGroup(groupName);
             var connection = new Connection { ConnectionId = Context.ConnectionId, UserName = username };
             if (group == null)
             {
                 group = new Group { Name = groupName };
-                messageRepository.AddGroup(group);
+                unitofWork.MessageRepository.AddGroup(group);
             }
             group.Connections.Add(connection);
-            return await messageRepository.SaveAllAsync();
+            return await unitofWork.Complete();
         }
 
         private async Task RemoveFromMessageGroup()
         {
-            var connection = await messageRepository.GetConnection(Context.ConnectionId);
+            var connection = await unitofWork.MessageRepository.GetConnection(Context.ConnectionId);
             if (connection != null)
             {
-                messageRepository.RemoveConnection(connection);
-                await messageRepository.SaveAllAsync();
+                unitofWork.MessageRepository.RemoveConnection(connection);
+                await unitofWork.Complete();
             }
         }
 
