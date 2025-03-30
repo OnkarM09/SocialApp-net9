@@ -1,20 +1,49 @@
 ::ng-deep {
+
+  .hide-user-profile{
+    display: block;
+  }
+
   .page-container {
     margin-top: 7.14rem;
   }
-}
 
-nav{
-  padding : .714rem 0;
+  nav {
+    padding: .714rem 0;
 
-  .navbar-brand{
-    > img{
-      width : 2.857rem;
+    .navbar-brand {
+      >img {
+        width: 2.857rem;
+      }
+    }
+
+    .show-nav-options {
+      display: none;
+    }
+
+    .form-control {
+      padding: .857rem !important;
+      background-color: white;
+    }
+
+
+  }
+
+  @media only screen and (max-width: 900px) {
+    nav {
+
+      .nav-item{
+        text-align: center;
+      }
+
+      .show-nav-options {
+        display: block;
+      }
+    }
+
+    .hide-user-profile{
+      display: none;
     }
   }
 
-  .form-control{
-    padding : .857rem !important;
-    background-color: white;
-  }
 }

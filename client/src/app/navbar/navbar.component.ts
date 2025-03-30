@@ -21,4 +21,11 @@ export class NavbarComponent {
     this.accountService.logout();
     this.router.navigateByUrl('/');
   }
+
+  hideBootstrapNavCollapse(){
+    const navbar = document.querySelector('.navbar-collapse');
+    if(navbar != null){
+      navbar.classList.remove('show');
+    }
+  }
 }

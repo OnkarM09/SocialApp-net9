@@ -1,12 +1,12 @@
 <nav class="navbar navbar-expand-lg bg-primary fixed-top">
   <div class="container">
-    <a class="navbar-brand text-light p-0 d-flex align-items-center" routerLink="/members">
+    <a class="navbar-brand text-light p-0 d-flex align-items-center">
       <img class="me-2" src="../../assets/social-media.png" alt="brand-icon">LinkUp</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse hidden-xs" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         @if(accountService.currentUser()){
         <!-- <li class="nav-item">
@@ -14,16 +14,30 @@
               class="fa fa-home h4 m-0 me-2"></i>Home</a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link text-light" routerLink="/members" routerLinkActive="active">
+          <a class="nav-link text-light" (click)="hideBootstrapNavCollapse();" routerLink="/members" routerLinkActive="active">
             <i class="fa fa-home h4 m-0 me-2"></i>Home</a>
         </li>
+        <li class="nav-item" *appHasRole="['Admin', 'Moderator']">
+          <a class="nav-link text-light" (click)="hideBootstrapNavCollapse();" routerLink="/admin" routerLinkActive="active"><i class="fa fa-lock h4 m-0 me-2"
+              aria-hidden="true"></i> Admin</a>
+        </li>
         <li class="nav-item">
-          <a class="nav-link text-light" routerLink="/liked-people" routerLinkActive="active"><i
+          <a class="nav-link text-light" (click)="hideBootstrapNavCollapse();" routerLink="/liked-people" routerLinkActive="active"><i
               class="fa fa-users h4 m-0 me-2"></i>Liked</a>
         </li>
-        <li class="nav-item" *appHasRole="['Admin', 'Moderator']" >
-          <a class="nav-link text-light" routerLink="/admin" routerLinkActive="active"><i
-              class="fa fa-lock h4 m-0 me-2" aria-hidden="true"></i> Admin</a>
+        <li class="nav-item show-nav-options">
+          <a class="nav-link text-light" (click)="hideBootstrapNavCollapse();" routerLink="/member/edit" routerLinkActive="active">
+            <i class="fa fa-user-circle me-2" aria-hidden="true"></i>Edit Profile</a>
+        </li>
+        <li class="nav-item show-nav-options">
+          <a class="nav-link text-light" (click)="hideBootstrapNavCollapse();" routerLinkActive="active" routerLink="/messages">
+            <i class="fa fa-comments me-2" aria-hidden="true"></i>
+            Messages</a>
+        </li>
+        <li class="nav-item show-nav-options">
+          <a class="nav-link text-light" (click)="hideBootstrapNavCollapse();" href="javascript:void(0)" (click)="logout()">
+            <i class="fa fa-sign-out me-2" aria-hidden="true"></i>
+            Logout</a>
         </li>
         }
 
@@ -33,11 +47,13 @@
         </li> -->
       </ul>
       @if(accountService.currentUser()){
-      <div class="btn-group ms-auto align-items-center" dropdown>
-        <img class="me-2 rounded-circle" src="{{accountService.currentUser()?.photoUrl  || '../../../../assets/user.png'}}" width="50" height="50" alt="Profile" />
-        <a id="button-basic" dropdownToggle type="button" class="dropdown-toggle text-capitalize text-white text-decoration-none"
-          aria-controls="dropdown-basic">{{accountService.currentUser()?.knownAs}}<span
-            class="caret"></span>
+      <div class="btn-group ms-auto align-items-center hide-user-profile" dropdown>
+        <img class="me-2 rounded-circle"
+          src="{{accountService.currentUser()?.photoUrl  || '../../../../assets/user.png'}}" width="50" height="50"
+          alt="Profile" />
+        <a id="button-basic" dropdownToggle type="button"
+          class="dropdown-toggle text-capitalize text-white text-decoration-none"
+          aria-controls="dropdown-basic">{{accountService.currentUser()?.knownAs}}<span class="caret"></span>
         </a>
         <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
           <li>
