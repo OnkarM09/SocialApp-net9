@@ -2,17 +2,17 @@
   <h3>{{getTitle()}}</h3>
 </div>
 <div class="container mt-3">
-  <div class="d-flex">
+  <div class="d-flex justify-content-center mt-4">
     <div class="btn-group" aria-label="Basic radio toggle button group">
       <input type="radio" class="btn-check" name="btnradio" id="btnradio1" [checked]="true" btnRadio="liked" autocomplete="off"
         [(ngModel)]="predicate" (change)="loadLikes()">
-      <label class="btn btn-outline-success" for="btnradio1">Liked</label>
+      <label class="btn btn-outline-primary" for="btnradio1">Liked</label>
       <input type="radio" class="btn-check" name="btnradio" id="btnradio2" btnRadio="likedBy" autocomplete="off"
         [(ngModel)]="predicate" (change)="loadLikes()">
-      <label class="btn btn-outline-success" for="btnradio2">Liked By</label>
+      <label class="btn btn-outline-primary" for="btnradio2">Liked By</label>
       <input type="radio" class="btn-check" name="btnradio" id="btnradio3" btnRadio="mutual" autocomplete="off"
         [(ngModel)]="predicate" (change)="loadLikes()">
-      <label class="btn btn-outline-success" for="btnradio3">Mutual</label>
+      <label class="btn btn-outline-primary" for="btnradio3">Mutual</label>
     </div>
   </div>
   <div class="mt-5">
@@ -24,13 +24,17 @@
       }
     </div>
   </div>
-  @if(likesService.paginatedResult()?.pagination){
+  @if(likesService.paginatedResult()?.pagination?.totalItems){
     <div class="d-flex justify-content-center mt-3">
       <pagination [boundaryLinks]="true" [totalItems]="likesService.paginatedResult()!.pagination!.totalItems"
       [itemsPerPage]="likesService.paginatedResult()!.pagination!.itemsPerPage" previousText="&lsaquo;"
       (pageChanged)="pageChanged($event)" [maxSize]="10" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
       [(ngModel)]="pageNumber">
     </pagination>
+    </div>
+  }@else {
+    <div class="d-flex align-items-center justify-content-center">
+        <h2 class="text-primary">No result found.</h2>
     </div>
   }
 </div>
