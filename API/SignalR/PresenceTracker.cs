@@ -5,8 +5,9 @@
         //To store connected users
         private static readonly Dictionary<string, List<string>> OnlineUsers = [];
 
-        public Task UserConnected(string username, string connectionId)
+        public Task<bool> UserConnected(string username, string connectionId)
         {
+            var isOnline = false;
             lock (OnlineUsers)
             {
                 if (OnlineUsers.ContainsKey(username))
@@ -16,22 +17,28 @@
                 else
                 {
                     OnlineUsers.Add(username, new List<string> { connectionId });
+                    isOnline = true;
                 }
             }
-            return Task.CompletedTask;
+            return Task.FromResult(isOnline);
         }
 
-        public Task UserDisconnected(string username, string connectionId)
+        public Task<bool> UserDisconnected(string username, string connectionId)
         {
+            var isOffline = false;
             lock (OnlineUsers)
             {
-                if (!OnlineUsers.ContainsKey(username)) return Task.CompletedTask;
+                if (!OnlineUsers.ContainsKey(username)) return Task.FromResult(isOffline);
 
                 OnlineUsers[(username)].Remove(connectionId);
 
-                if (OnlineUsers[username].Count == 0) OnlineUsers.Remove(username); //Removing the user key
+                if (OnlineUsers[username].Count == 0)
+                {
+                    OnlineUsers.Remove(username); //Removing the user key}
+                    isOffline = true;
+                }
+                return Task.FromResult(isOffline);
             }
-            return Task.CompletedTask;
         }
 
         public Task<string[]> GetOnlineUsers()

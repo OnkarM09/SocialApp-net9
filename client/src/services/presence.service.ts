@@ -26,8 +26,12 @@ export class PresenceService {
 
     this.hubConnection.start().catch(error => console.log(error));
 
-    this.hubConnection.on('UserIsOnline', username => this.toastService.info(username + ' is online'));
-    this.hubConnection.on('UserIsOffline', username => this.toastService.warning(username + ' is offline'));
+    this.hubConnection.on('UserIsOnline', username => {
+      this.onlineUsers.update((users) => [...users, username])
+    });
+    this.hubConnection.on('UserIsOffline', username => {
+      this.onlineUsers.update((users) => users.filter(u => u !== username))
+    });
 
     this.hubConnection.on('GetOnlineUsers', usernames => {
       this.onlineUsers.set(usernames);
