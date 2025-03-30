@@ -18,7 +18,7 @@ export class MessageService {
 
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastrService);
-  private hubConnection?: HubConnection;
+  hubConnection?: HubConnection;
 
   paginatedResult = signal<PaginatedResult<Message[]> | null>(null);
   messageThread = signal<Message[]>([]);
