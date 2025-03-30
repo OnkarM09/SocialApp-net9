@@ -1,42 +1,39 @@
 <div class="card mt-3">
-  <div class="card-body">
+  <div class="card-body" #chatScroll>
     @if(messageService.messageThread().length == 0){
-      <p>No messages yet</p>
+      <div class="d-flex justify-content-center align-items-center h-100">
+        <h2 class="text-primary"><i class="fa fa-comments me-3"></i>No messages yet</h2>
+      </div>
     } @else {
-      <ul class="chat list-unstyled" #chatScroll style="height:500px; overflow-y: auto; scroll-behavior: smooth;">
+      <div class="d-flex flex-column align-items-end justify-content-end">
         @for (message of messageService.messageThread(); track message.id) {
-          <li class="border-bottom border-dark-subtle mb-2">
-            <div>
-              <span class="chat-img float-end">
-                <img width="40" class="rounded-circle" [src]="message.senderPhotoUrl || './assets/user.png'" alt="Sender">
-              </span>
+          <div class="chat-div d-flex mb-2" [ngClass]="message.senderUsername != username() ? 'chat-div-receiver' : 'chat-div-sender'">
               <div class="chat-body">
+                <p class="m-0">{{message.content}}</p>
                 <div class="header">
                   <small class="text-muted">
                     <i class="fa fa-clock-o"></i>
                     {{message.messageSent | timeago}}
                     @if(!message.dateRead && message.senderUsername != username()){
-                      <span class="text-danger">(unread)</span>
+                      <span class="text-secondary ms-2"><i class="fa fa-check" aria-hidden="true"></i></span>
                     }
                     @if(message.dateRead && message.senderUsername != username()){
-                      <span class="text-success">(read) {{message.dateRead | timeago}}</span>
+                      <span class="text-primary ms-2"><i class="fa fa-check" aria-hidden="true"></i></span>
                     }
                   </small>
                 </div>
-                <p>{{message.content}}</p>
               </div>
-            </div>
-          </li>
+          </div>
         }
-      </ul>
+      </div>
+
     }
   </div>
   <div class="card-footer">
     <form #messageForm="ngForm" (ngSubmit)="sendMessage(messageForm)">
-      <div class="input-group">
-
+      <div class="input-group align-items-center">
         <!-- <button class="btn btn-primary" type="button" (click)="toggledEmoji = !toggledEmoji">Emoji</button> -->
-        <input type="text" class="form-control input-sm" placeholder="Send a private message" name="messageContent" [(ngModel)]="messageContent" required>
+        <textarea type="text" class="form-control input-sm me-2" placeholder="Send a private message" name="messageContent" [(ngModel)]="messageContent" required></textarea>
         <div class="input-group-append">
           <button class="btn btn-primary" type="submit" [disabled]="!messageForm.valid">Send</button>
         </div>
@@ -47,4 +44,3 @@
 @if(toggledEmoji){
   <emoji-mart title="Pick your emoji…" emoji="point_up" (emojiClick)="addEmoji($event)"></emoji-mart>
 }
-

@@ -3,17 +3,18 @@ import { MessageService } from '../../../services/message.service';
 import { TimeagoModule } from 'ngx-timeago';
 import { FormsModule, NgForm } from '@angular/forms';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-member-messages',
   standalone: true,
-  imports: [TimeagoModule, FormsModule, PickerComponent],
+  imports: [TimeagoModule, FormsModule, PickerComponent, NgClass],
   templateUrl: './member-messages.component.html',
   styleUrl: './member-messages.component.scss'
 })
 export class MemberMessagesComponent implements AfterViewChecked {
 
-  @ViewChild('chatScroll') chatScroll? : any;
+  @ViewChild('chatScroll') chatScroll?: any;
 
   messageService = inject(MessageService);
 
@@ -28,8 +29,8 @@ export class MemberMessagesComponent implements AfterViewChecked {
     this.scrollToBottom();
   }
 
-  private scrollToBottom(){
-    if(this.chatScroll){
+  private scrollToBottom() {
+    if (this.chatScroll) {
       this.chatScroll.nativeElement.scrollTop = this.chatScroll.nativeElement.scrollHeight;
     }
   }

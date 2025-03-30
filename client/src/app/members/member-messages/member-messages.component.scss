@@ -1,0 +1,37 @@
+.card-body {
+  height: 33.142rem;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+
+  .chat-div {
+    padding: .857rem;
+    border-radius: 24px;
+    width: max-content;
+
+    max-width: 100%;
+    line-height: 1.6;
+
+    &.chat-div-receiver {
+      background: #eee;
+      border-bottom-right-radius: 0px;
+
+      .header {
+        text-align: end;
+      }
+    }
+
+    &.chat-div-sender {
+      background: rgba(33, 150, 243, .2);
+      align-self: flex-start;
+      border-top-left-radius: 0px;
+
+      .header {
+        text-align: start;
+      }
+    }
+
+    .header {
+      font-size: .857rem;
+    }
+  }
+}
