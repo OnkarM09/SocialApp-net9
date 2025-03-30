@@ -1,0 +1,9 @@
+table{
+  td{
+    text-overflow: ellipsis;
+    word-wrap: nowrap;
+    max-width: 1rem;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}

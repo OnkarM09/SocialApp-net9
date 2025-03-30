@@ -25,15 +25,15 @@
       <td>{{message.content}}</td>
       <td>
         <div>
-          <img width="40" class="me-2 rounded-circle"
+          <img tooltip="{{isOutbox ? message.recipientUsername : message.senderUsername}}" width="40" class="me-2 rounded-circle"
             [src]="isOutbox ? (message.recipientPhotoUrl || './../../assets/user.png') : (message.senderPhotoUrl || './../../assets/user.png')"
             alt="User">
-          <strong>{{isOutbox ? message.recipientUsername : message.senderUsername}}</strong>
+
         </div>
       </td>
       <td>{{message.messageSent | timeago}}</td>
       <td (click)="$event.stopPropagation();">
-        <button class="btn btn-danger" (click)="deleteMessage(message.id)">Delete</button>
+        <button class="btn btn-danger" tooltip="Delete" (click)="deleteMessage(message.id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
       </td>
     </tr>
     }

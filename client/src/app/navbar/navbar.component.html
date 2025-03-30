@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-primary fixed-top">
   <div class="container">
-    <a class="navbar-brand text-light p-0 d-flex align-items-center" routerLink="/">
+    <a class="navbar-brand text-light p-0 d-flex align-items-center" routerLink="/members">
       <img class="me-2" src="../../assets/social-media.png" alt="brand-icon">LinkUp</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -9,28 +9,28 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         @if(accountService.currentUser()){
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link active text-light" routerLink="/" routerLinkActive="active"><i
               class="fa fa-home h4 m-0 me-2"></i>Home</a>
+        </li> -->
+        <li class="nav-item">
+          <a class="nav-link text-light" routerLink="/members" routerLinkActive="active">
+            <i class="fa fa-home h4 m-0 me-2"></i>Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-light" routerLink="/liked-people" routerLinkActive="active"><i
               class="fa fa-users h4 m-0 me-2"></i>Liked</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-light" routerLink="/members" routerLinkActive="active"><i
-              class="fa fa-users h4 m-0 me-2"></i>People</a>
-        </li>
         <li class="nav-item" *appHasRole="['Admin', 'Moderator']" >
           <a class="nav-link text-light" routerLink="/admin" routerLinkActive="active"><i
-              class="fa fa-exclamation-triangle h4 m-0 me-2" aria-hidden="true"></i> Admin</a>
+              class="fa fa-lock h4 m-0 me-2" aria-hidden="true"></i> Admin</a>
         </li>
         }
 
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link text-light" routerLink="/error" routerLinkActive="active"><i
               class="fa fa-exclamation-triangle h4 m-0 me-2" aria-hidden="true"></i> Errors</a>
-        </li>
+        </li> -->
       </ul>
       @if(accountService.currentUser()){
       <div class="btn-group ms-auto align-items-center" dropdown>

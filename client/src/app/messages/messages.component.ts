@@ -7,11 +7,12 @@ import { TimeagoModule } from 'ngx-timeago';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { Message } from '../models/message';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @Component({
   selector: 'app-messages',
   standalone: true,
-  imports: [ButtonsModule, RouterModule, FormsModule, TimeagoModule, PaginationModule, NgSelectModule],
+  imports: [ButtonsModule, RouterModule, FormsModule, TimeagoModule, PaginationModule, NgSelectModule, TooltipModule],
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.scss'
 })
