@@ -31,7 +31,10 @@ namespace API.Extensions
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
 
             //Adding signalR
-            services.AddSignalR();
+            services.AddSignalR(opt =>
+            {
+                opt.EnableDetailedErrors = true;
+            });
             services.AddSingleton<PresenceTracker>();
             return services;
         }

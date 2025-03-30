@@ -27,24 +27,28 @@ export class MessageService {
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUserName, {
         accessTokenFactory: () => user.token
-      }).withAutomaticReconnect()
+      })
+      .withAutomaticReconnect()
       .build()
 
     this.hubConnection.start().catch(err => {
       console.log(err);
-      this.toastService.error("Error while creating message hub connection!");
     });
 
     this.hubConnection.on('RecievedMessageThread', messages => {
       this.messageThread.set(messages)
-    })
+    });
+
+    this.hubConnection.on('NewMessage', newMsg => {
+      console.log(newMsg)
+      this.messageThread.update((currentMessages) => [...currentMessages, newMsg])
+    });
   }
 
   stopHubConnection() {
     if (this.hubConnection?.state === HubConnectionState.Connected) {
       this.hubConnection.stop().catch(err => {
         console.log(err);
-        this.toastService.error("Error while stopping message hub connection!");
       })
     }
   }
@@ -63,8 +67,12 @@ export class MessageService {
     return this.http.get<Message[]>(this.baseUrl + 'messages/thread/' + username)
   }
 
-  sendMessage(recipientUsername: string, content: string) {
-    return this.http.post<Message>(`${this.baseUrl}messages`, { recipientUsername, content })
+  async sendMessage(recipientUsername: string, content: string) {
+    return this.hubConnection?.invoke('SendMessage', {
+      recipientUsername: recipientUsername,
+      content
+    })
+
   }
 
   deleteMessage(id: number) {

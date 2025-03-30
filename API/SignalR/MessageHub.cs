@@ -10,12 +10,13 @@ using System.Runtime.InteropServices;
 
 namespace API.SignalR
 {
-    public class MessageHub(MessageRepository messageRepository, IUserRepository userRepository, IMapper mapper) : Hub
+    public class MessageHub(IMessageRepository messageRepository, IUserRepository userRepository, IMapper mapper) : Hub
     {
         public override async Task OnConnectedAsync()
         {
             var httpContext = Context.GetHttpContext();
             var otherUser = httpContext?.Request.Query["user"];
+
             if(Context.User == null || string.IsNullOrEmpty(otherUser))
             {
                 throw new Exception("Cannot join group");
@@ -35,25 +36,28 @@ namespace API.SignalR
         public async Task SendMessage(CreateMessageDto createMessageDto)
         {
             var userName = Context.User?.GetUserName() ?? throw new Exception("User not found!");
-            if (userName == createMessageDto.RecipientUserName) throw new HubException("You cannot message yourself");
+
+            if (userName == createMessageDto.RecipientUserName.ToLower()) 
+                throw new HubException("You cannot message yourself");
 
             var sender = await userRepository.GetUserByUserNameAsync(userName);
             var recipient = await userRepository.GetUserByUserNameAsync(createMessageDto.RecipientUserName);
 
-            if (sender == null || recipient == null || sender.UserName == null || recipient.UserName == null)  throw new Exception("Cannot send message at this time");
+            if (sender == null || recipient == null || sender.UserName == null || recipient.UserName == null)  
+                throw new Exception("Cannot send message at this time");
 
             var message = new Message
             {
                 Sender = sender,
                 Recipient = recipient,
-                SenderUsername = userName,
+                SenderUsername = sender.UserName,
                 RecipientUsername = recipient.UserName,
                 Content = createMessageDto.Content
             };
 
             messageRepository.AddMessage(message);
             if (await messageRepository.SaveAllAsync()) { 
-                var group = GetGroupName(sender.UserName, createMessageDto.RecipientUserName);
+                var group = GetGroupName(sender.UserName, recipient.UserName);
                 await Clients.Group(group).SendAsync("NewMessage", mapper.Map<MessageDto>(message));
             }
         }
@@ -61,7 +65,7 @@ namespace API.SignalR
         private string GetGroupName(string caller, string? other)
         {
             var stringCompare = string.CompareOrdinal(caller, other) < 0;
-            return stringCompare ? $"{caller} -${other}" : $"{other}-{caller}";
+            return stringCompare ? $"{caller}-{other}" : $"{other}-{caller}";
         }
     }
 }

@@ -12,12 +12,14 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
   styleUrl: './member-messages.component.scss'
 })
 export class MemberMessagesComponent {
-  username = input.required<string>();
-  messageContent: string = '';
-  toggledEmoji : boolean = false;
   messageService = inject(MessageService);
 
-  constructor(private readonly eRef: ElementRef) {}
+  username = input.required<string>();
+
+  messageContent: string = '';
+  toggledEmoji: boolean = false;
+
+  constructor(private readonly eRef: ElementRef) { }
 
   @HostListener('document:click', ['$event'])
   clickout(event: Event) {
@@ -27,11 +29,9 @@ export class MemberMessagesComponent {
   }
 
   sendMessage(form: NgForm) {
-    this.messageService.sendMessage(this.username(), this.messageContent).subscribe({
-      next: message => {
-        form.reset();
-      }
-    });
+    this.messageService.sendMessage(this.username(), this.messageContent).then(() => {
+      form.reset();
+    })
   }
 
   addEmoji(event: any) {

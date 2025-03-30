@@ -6,7 +6,6 @@ import { TabDirective, TabsetComponent, TabsModule } from 'ngx-bootstrap/tabs';
 import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
 import { TimeagoModule } from 'ngx-timeago';
 import { MemberMessagesComponent } from "../member-messages/member-messages.component";
-import { Message } from '../../models/message';
 import { MessageService } from '../../../services/message.service';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PresenceService } from '../../../services/presence.service';
