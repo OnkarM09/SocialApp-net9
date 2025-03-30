@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace API.SignalR
 {
-    public class MessageHub(IMessageRepository messageRepository, IUserRepository userRepository, IMapper mapper) : Hub
+    public class MessageHub(IMessageRepository messageRepository, IUserRepository userRepository, IMapper mapper, IHubContext<PresenceHub> presenceHub) : Hub
     {
         public override async Task OnConnectedAsync()
         {
@@ -59,9 +59,22 @@ namespace API.SignalR
 
             var groupName = GetGroupName(sender.UserName, recipient.UserName);
             var group = await messageRepository.GetMessageGroup(groupName);
+
             if (group != null && group.Connections.Any(x => x.UserName == recipient.UserName))
             {
                 message.DateRead = DateTime.UtcNow;
+            }
+            else
+            {
+                var connections = await PresenceTracker.GetConnectionForUser(recipient.UserName);
+                if (connections != null && connections?.Count != null)
+                {
+                    await presenceHub.Clients.Clients(connections).SendAsync("NewMessageRecieved", new
+                    {
+                        username = sender.UserName,
+                        knownAs = sender.KnownAs
+                    });
+                }
             }
 
             messageRepository.AddMessage(message);

@@ -3,6 +3,8 @@ import { environment } from '../environments/environment';
 import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 import { ToastrService } from 'ngx-toastr';
 import { User } from '../app/models/user';
+import { take } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,7 @@ export class PresenceService {
   hubUrl = environment.hubsUrl;
   private hubConnection? : HubConnection;
   private readonly toastService = inject(ToastrService);
+  private readonly router = inject(Router)
   onlineUsers = signal<string[]>([]);
 
   createHubConnection(user : User){
@@ -28,6 +31,15 @@ export class PresenceService {
 
     this.hubConnection.on('GetOnlineUsers', usernames => {
       this.onlineUsers.set(usernames);
+    });
+    this.hubConnection.on('NewMessageRecieved', ({username, knownAs}) =>{
+      this.toastService.info(knownAs + ' has sent you a new message')
+      .onTap
+      .pipe(take(1))
+      .subscribe(() => {
+        console.log(username, knownAs)
+        this.router.navigateByUrl(`/members/${username}?tab=Messages`)
+      })
     })
   }
 
