@@ -7,6 +7,7 @@ import { setPaginationHeaders, setPaginationResponse } from '../app/helpers/pagi
 import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 import { User } from '../app/models/user';
 import { ToastrService } from 'ngx-toastr';
+import { Group } from '../app/models/group';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,19 @@ export class MessageService {
     this.hubConnection.on('RecievedMessageThread', messages => this.messageThread.set(messages));
 
     this.hubConnection.on('NewMessage', newMsg => this.messageThread.update((currentMessages) => [...currentMessages, newMsg]));
+
+    this.hubConnection.on('UpdatedGroup', (group: Group) => {
+      if (group.connections.some(x => x.username === otherUserName)) {
+        this.messageThread.update(messages => {
+          messages.forEach(message => {
+            if (!message.dateRead) {
+              message.dateRead = new Date(Date.now());
+            }
+          })
+          return messages;
+        })
+      }
+    });
   }
 
   stopHubConnection() {
