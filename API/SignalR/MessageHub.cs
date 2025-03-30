@@ -1,11 +1,16 @@
 ﻿using API.Data;
+using API.DTOs;
+using API.Entities;
 using API.Extensions;
+using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Runtime.InteropServices;
 
 namespace API.SignalR
 {
-    public class MessageHub(MessageRepository messageRepository) : Hub
+    public class MessageHub(MessageRepository messageRepository, IUserRepository userRepository, IMapper mapper) : Hub
     {
         public override async Task OnConnectedAsync()
         {
@@ -25,6 +30,32 @@ namespace API.SignalR
         public override Task OnDisconnectedAsync(Exception? exception)
         {
             return base.OnDisconnectedAsync(exception);
+        }
+
+        public async Task SendMessage(CreateMessageDto createMessageDto)
+        {
+            var userName = Context.User?.GetUserName() ?? throw new Exception("User not found!");
+            if (userName == createMessageDto.RecipientUserName) throw new HubException("You cannot message yourself");
+
+            var sender = await userRepository.GetUserByUserNameAsync(userName);
+            var recipient = await userRepository.GetUserByUserNameAsync(createMessageDto.RecipientUserName);
+
+            if (sender == null || recipient == null || sender.UserName == null || recipient.UserName == null)  throw new Exception("Cannot send message at this time");
+
+            var message = new Message
+            {
+                Sender = sender,
+                Recipient = recipient,
+                SenderUsername = userName,
+                RecipientUsername = recipient.UserName,
+                Content = createMessageDto.Content
+            };
+
+            messageRepository.AddMessage(message);
+            if (await messageRepository.SaveAllAsync()) { 
+                var group = GetGroupName(sender.UserName, createMessageDto.RecipientUserName);
+                await Clients.Group(group).SendAsync("NewMessage", mapper.Map<MessageDto>(message));
+            }
         }
 
         private string GetGroupName(string caller, string? other)
