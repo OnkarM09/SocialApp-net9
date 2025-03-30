@@ -1,5 +1,5 @@
-<div class="row justify-content-center">
-  <div class="d-flex justify-content-end w-100 mb-4 align-items-center">
+<div class="row justify-content-center mx-3">
+  <div class="d-flex justify-content-end w-100 mb-4 align-items-center page-actions">
     <h6 class="m-0 me-3">Showing {{memberService.paginatedResult()?.pagination?.totalItems}} results</h6>
     <button class="btn btn-primary me-4" (click)="openFilterModal(filterHtml)">Filter</button>
     <ng-select [(ngModel)]="memberService.userParams().orderBy" name="orderBy" style="min-width : 118px" placeholder="Sort by" (change)="sortChange($event)">

@@ -1,1 +1,17 @@
 
+::ng-deep{
+  @media only screen and (max-width: 600px) {
+    .page-actions{
+      flex-direction: column;
+      h6, .ng-select, .btn{
+        width : 100%;
+        margin-top: 1rem;
+      }
+
+      h6{
+        text-align: center;
+      }
+    }
+  }
+
+}
