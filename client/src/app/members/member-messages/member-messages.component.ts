@@ -1,5 +1,4 @@
-import { Component, ElementRef, HostListener, inject, input, output } from '@angular/core';
-import { Message } from '../../models/message';
+import { Component, ElementRef, HostListener, inject, input } from '@angular/core';
 import { MessageService } from '../../../services/message.service';
 import { TimeagoModule } from 'ngx-timeago';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -14,11 +13,9 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 })
 export class MemberMessagesComponent {
   username = input.required<string>();
-  messages = input.required<Message[]>();
-  updateMessages = output<Message>();
   messageContent: string = '';
   toggledEmoji : boolean = false;
-  private readonly messageService = inject(MessageService);
+  messageService = inject(MessageService);
 
   constructor(private readonly eRef: ElementRef) {}
 
@@ -32,7 +29,6 @@ export class MemberMessagesComponent {
   sendMessage(form: NgForm) {
     this.messageService.sendMessage(this.username(), this.messageContent).subscribe({
       next: message => {
-        this.updateMessages.emit(message);
         form.reset();
       }
     });
