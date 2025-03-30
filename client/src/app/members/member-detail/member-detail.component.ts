@@ -12,6 +12,7 @@ import { PresenceService } from '../../../services/presence.service';
 import { AccountService } from '../../../services/account.service';
 import { merge } from 'rxjs';
 import { HubConnection, HubConnectionState } from '@microsoft/signalr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-member-detail',
