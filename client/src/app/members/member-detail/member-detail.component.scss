@@ -11,3 +11,9 @@
 .card-footer {
   padding: 10px 15px;
 }
+
+::ng-deep{
+  .nav-tabs{
+    margin-bottom: 1rem;
+  }
+}

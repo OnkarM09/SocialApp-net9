@@ -1,3 +1,18 @@
 .nv-file-over{
   border : 2px dotted #2196f3;
 }
+
+::ng-deep{
+  @media only screen and (max-width: 900px) {
+    .modal{
+      .modal-body{
+        .btn{
+          display: block;
+          width: 100%;
+          margin-bottom: 1rem;
+        }
+      }
+    }
+  }
+
+}

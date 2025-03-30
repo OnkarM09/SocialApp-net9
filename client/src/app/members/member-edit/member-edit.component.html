@@ -1,7 +1,7 @@
 @if(member){
-<div class="row">
-  <div class="col-md-3 mb-3">
-    <h1 class="text-center m-0">My Profile</h1>
+<div class="row px-2">
+  <div class="col-md-3">
+    <h1 class="text-center m-0 mb-3">My Profile</h1>
   </div>
   <div class="col-md-9">
     @if (editForm.dirty ) {
@@ -12,7 +12,7 @@
     </div>
     }
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3 mb-4">
     <div class="card text-center">
       <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}" class="card-img img-thumbnail">
       <div class="card-body">
@@ -47,7 +47,7 @@
   <div class="col-md-9">
     <tabset class="member-tabs">
       <tab heading="About {{member.knownAs}}">
-        <form class="p-4" id="editForm" #editForm="ngForm" (ngSubmit)="updateProfile()">
+        <form class="px-2" id="editForm" #editForm="ngForm" (ngSubmit)="updateProfile()">
           <h4 class="m-0">Description</h4>
           <textarea name="introduction" class="form-control" [(ngModel)]="member.introduction" rows="6"></textarea>
           <h4 class="mt-4">Looking for</h4>

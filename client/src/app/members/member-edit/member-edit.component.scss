@@ -1,0 +1,13 @@
+::ng-deep{
+  .nav-tabs{
+    margin-bottom: 1rem;
+  }
+
+  .img-thumbnail{
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    padding: 0;
+  }
+}
+
