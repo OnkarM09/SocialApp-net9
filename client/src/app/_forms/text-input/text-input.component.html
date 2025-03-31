@@ -19,4 +19,10 @@
   @if(control.hasError('isMatching')){
   <div class="invalid-feedback text-start mt-2">Password does not match</div>
   }
+  @if(control.hasError('noNumber')){
+  <div class="invalid-feedback text-start mt-2">Password should contain at least 1 number</div>
+  }
+  @if(control.hasError('noUppercase')){
+  <div class="invalid-feedback text-start mt-2">Password should contain at least 1 uppercase</div>
+  }
 </div>

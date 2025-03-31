@@ -8,6 +8,7 @@ import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@micros
 import { User } from '../app/models/user';
 import { ToastrService } from 'ngx-toastr';
 import { Group } from '../app/models/group';
+import { BusyService } from './busy.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +20,14 @@ export class MessageService {
 
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastrService);
+  private readonly busyService = inject(BusyService);
   hubConnection?: HubConnection;
 
   paginatedResult = signal<PaginatedResult<Message[]> | null>(null);
   messageThread = signal<Message[]>([]);
 
   createHubConnection(user: User, otherUserName: string) {
+    this.busyService.busy();
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUserName, {
         accessTokenFactory: () => user.token
@@ -32,7 +35,7 @@ export class MessageService {
       .withAutomaticReconnect()
       .build()
 
-    this.hubConnection.start().catch(err => console.log(err));
+    this.hubConnection.start().catch(err => console.log(err)).finally(() => this.busyService.idle());
 
     this.hubConnection.on('RecievedMessageThread', messages => this.messageThread.set(messages));
 

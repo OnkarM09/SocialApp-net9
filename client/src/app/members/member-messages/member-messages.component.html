@@ -35,7 +35,11 @@
         <!-- <button class="btn btn-primary" type="button" (click)="toggledEmoji = !toggledEmoji">Emoji</button> -->
         <textarea type="text" class="form-control input-sm me-2" placeholder="Send a private message" name="messageContent" [(ngModel)]="messageContent" required></textarea>
         <div class="input-group-append">
-          <button class="btn btn-primary" type="submit" [disabled]="!messageForm.valid">Send</button>
+          <button class="btn btn-primary" type="submit" [disabled]="!messageForm.valid" [disabled]="loading">Send
+            @if(loading){
+              <i class="fa fa-spinner fa-spin"></i>
+            }
+          </button>
         </div>
       </div>
     </form>

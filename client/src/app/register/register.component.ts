@@ -36,8 +36,8 @@ export class RegisterComponent implements OnInit {
       dateOfBirth: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), this.matchValues('password')]]
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(8), this.containsNumber(), this.containsUppercase()]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(8), this.containsNumber(), this.containsUppercase(), this.matchValues('password')]]
     });
 
     this.registerForm.controls['password'].valueChanges.subscribe({
@@ -49,6 +49,20 @@ export class RegisterComponent implements OnInit {
     return (control: AbstractControl) => {
       return control.value == control.parent?.get(matchTo)?.value ? null : { isMatching: true };
     }
+  }
+
+  containsNumber(): ValidatorFn {
+    return (control: AbstractControl) => {
+      const hasNumber = /\d/.test(control.value);
+    return hasNumber ? null : { noNumber: true };
+    }
+  }
+
+  containsUppercase(): ValidatorFn {
+    return (control: AbstractControl) => {
+      const hasUppercase = /[A-Z]/.test(control.value);
+      return hasUppercase ? null : { noUppercase: true };
+    };
   }
 
   register() {

@@ -22,6 +22,7 @@ export class MemberMessagesComponent implements AfterViewChecked {
 
   messageContent: string = '';
   toggledEmoji: boolean = false;
+  loading: boolean = false;
 
   constructor(private readonly eRef: ElementRef) { }
 
@@ -43,10 +44,11 @@ export class MemberMessagesComponent implements AfterViewChecked {
   }
 
   sendMessage(form: NgForm) {
+    this.loading = true;
     this.messageService.sendMessage(this.username(), this.messageContent).then(() => {
       form.reset();
       this.scrollToBottom();
-    })
+    }).finally(() => this.loading =false);
   }
 
   addEmoji(event: any) {
