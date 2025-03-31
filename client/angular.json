@@ -17,7 +17,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/client",
+            "outputPath": {
+              "base": "../API/wwwroot",
+              "browser": ""
+            },
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -36,7 +39,7 @@
               "node_modules/font-awesome/css/font-awesome.min.css",
               "node_modules/bootswatch/dist/materia/bootstrap.min.css",
               "node_modules/ngx-spinner/animations/line-scale-party.css",
-               "node_modules/@ctrl/ngx-emoji-mart/picker.css",
+              "node_modules/@ctrl/ngx-emoji-mart/picker.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -46,8 +49,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "4mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -55,6 +58,11 @@
                   "maximumError": "4kb"
                 }
               ],
+              "optimization": {
+                "styles": {
+                  "inlineCritical": false
+                }
+              },
               "outputHashing": "all"
             },
             "development": {
