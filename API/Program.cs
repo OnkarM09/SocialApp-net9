@@ -48,7 +48,7 @@ catch (Exception e)
 {
     var logger = services.GetRequiredService<ILogger<Program>>();
     logger.LogError(e, "Error while migrating users data");
-    throw new Exception();
+    throw new ApplicationException("An error occurred during migration.", e);
 }
 
-app.Run();
+await app.RunAsync();
