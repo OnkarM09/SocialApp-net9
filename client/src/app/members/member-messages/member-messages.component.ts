@@ -38,6 +38,7 @@ export class MemberMessagesComponent implements AfterViewChecked {
 
   @HostListener('document:click', ['$event'])
   clickout(event: Event) {
+    console.log(this.eRef.nativeElement)
     if (this.toggledEmoji && !this.eRef.nativeElement.contains(event.target)) {
       this.toggledEmoji = false;
     }
@@ -47,6 +48,7 @@ export class MemberMessagesComponent implements AfterViewChecked {
     this.loading = true;
     this.messageService.sendMessage(this.username(), this.messageContent).then(() => {
       form.reset();
+      this.closeEmojiMart();
       this.scrollToBottom();
     }).finally(() => this.loading =false);
   }
@@ -54,5 +56,9 @@ export class MemberMessagesComponent implements AfterViewChecked {
   addEmoji(event: any) {
     console.log(event)
     this.messageContent += event.emoji.native;
+  }
+
+  closeEmojiMart() : void{
+    this.toggledEmoji = false;
   }
 }

@@ -17,7 +17,9 @@ namespace API.Extensions
             //Adding dbcontext
             services.AddDbContext<DataContext>(options =>
             {
-                options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(config.GetConnectionString("DefaultConnection"), options => {
+                    options.EnableRetryOnFailure();
+                });
             });
 
             services.AddCors();

@@ -52,12 +52,11 @@ public class UsersController(IUnitofWork unitofWork, IMapper mapper, IPhotoServi
         AppUser? user = await unitofWork.UserRepository.GetUserByUserNameAsync(User.GetUserName());
         if (user == null) return BadRequest("User not found!");
 
-        //mapper.Map(memberUpdateDto, user);
         user.Interests = memberUpdateDto.Interests;
         user.LookingFor = memberUpdateDto.LookingFor;
         user.Introduction = memberUpdateDto.Introduction;
-        user.City = memberUpdateDto.City;
-        user.Country = memberUpdateDto.Country;
+        user.City = memberUpdateDto.City!;
+        user.Country = memberUpdateDto.Country!;
         unitofWork.UserRepository.Update(user);
 
         if (await unitofWork.Complete()) return NoContent();
