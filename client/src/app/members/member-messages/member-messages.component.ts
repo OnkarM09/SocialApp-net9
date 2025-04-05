@@ -4,7 +4,7 @@ import { TimeagoModule } from 'ngx-timeago';
 import { FormsModule, NgForm } from '@angular/forms';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { NgClass } from '@angular/common';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { AccountService } from '../../../services/account.service';
 
 @Component({
   selector: 'app-member-messages',
@@ -18,7 +18,7 @@ export class MemberMessagesComponent implements AfterViewChecked {
   @ViewChild('chatScroll') chatScroll?: any;
 
   messageService = inject(MessageService);
-  route = inject(ActivatedRoute);
+  accountService = inject(AccountService);
 
   username = input.required<string>();
 
@@ -55,12 +55,11 @@ export class MemberMessagesComponent implements AfterViewChecked {
   }
 
   userTyping() : void{
-    const username = this.route.snapshot.paramMap.get('username');
-    console.log('User typing', username)
-    if(username === null) return;
-    this.messageService.sendUserTyping(username)?.then(() => {
+    console.log('User is typing', this.username())
+    this.messageService.sendUserTyping()?.then(() => {
       console.log('User is typing send')
     });
+
   }
 
   hideUserTyping() : void{

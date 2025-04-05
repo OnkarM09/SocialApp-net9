@@ -9,6 +9,7 @@ import { User } from '../app/models/user';
 import { ToastrService } from 'ngx-toastr';
 import { Group } from '../app/models/group';
 import { BusyService } from './busy.service';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,8 @@ export class MessageService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastrService);
   private readonly busyService = inject(BusyService);
+  private readonly accountService = inject(AccountService);
+
   hubConnection?: HubConnection;
 
   paginatedResult = signal<PaginatedResult<Message[]> | null>(null);
@@ -99,8 +102,8 @@ export class MessageService {
     return this.http.delete(this.baseUrl + 'messages/' + id);
   }
 
-  sendUserTyping(userName: string) {
-    return this.hubConnection?.invoke('ShowUserTyping', userName);
+  sendUserTyping() {
+    return this.hubConnection?.invoke('ShowUserTyping', this.accountService.currentUser()?.knownAs);
   }
 
   hideUserTyping() {

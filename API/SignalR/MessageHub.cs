@@ -42,9 +42,8 @@ namespace API.SignalR
 
         public async Task ShowUserTyping(string userName)
         {
-            AppUser? user = await unitofWork.UserRepository.GetUserByUserNameAsync(userName);
-            if (user == null) throw new Exception("User not found!");
-            await Clients.Others.SendAsync("UserIsTyping", user.KnownAs);
+            if (userName == null) throw new Exception("User not found!");
+            await Clients.Others.SendAsync("UserIsTyping", userName);
         }
 
         public async Task HideUserTyping()
