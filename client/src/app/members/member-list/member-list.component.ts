@@ -7,11 +7,12 @@ import { FormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { sortingList } from '../../models/sortList';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @Component({
   selector: 'app-member-list',
   standalone: true,
-  imports: [MemberCardComponent, PaginationModule, FormsModule, NgSelectModule],
+  imports: [MemberCardComponent, PaginationModule, FormsModule, NgSelectModule, TooltipModule],
   templateUrl: './member-list.component.html',
   styleUrl: './member-list.component.scss',
   providers: [BsModalService]
@@ -24,6 +25,7 @@ export class MemberListComponent implements OnInit {
   genderList = [{ value: 'male', display: 'Males' }, { value: 'female', display: 'Female' }];
   sortingList = sortingList;
   modalRef?: BsModalRef;
+  searchString : string = '';
 
   ngOnInit() {
     this.loadMembers();
@@ -54,5 +56,13 @@ export class MemberListComponent implements OnInit {
 
   sortChange(event: any) {
     this.loadMembers();
+  }
+
+  searchUsers(){
+    this.memberService.getUsersFromSearch(this.searchString).subscribe({
+      next : (response : Member[]) => {
+        this.members = response;
+      }
+    })
   }
 }

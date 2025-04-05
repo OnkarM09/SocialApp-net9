@@ -41,7 +41,6 @@ export class PresenceService {
       .onTap
       .pipe(take(1))
       .subscribe(() => {
-        console.log(username, knownAs)
         this.router.navigateByUrl(`/members/${username}?tab=Messages`)
       })
     })

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Member } from '../app/models/member';
-import { Observable } from 'rxjs';
+import { debounceTime, Observable } from 'rxjs';
 import { PaginatedResult } from '../app/models/pagination';
 import { UserParams } from '../app/models/userParams';
 import { AccountService } from './account.service';
@@ -29,6 +29,7 @@ export class MembersService {
     params = params.append('maxAge', this.userParams().maxAge);
     params = params.append('gender', this.userParams().gender);
     params = params.append('orderBy', this.userParams().orderBy);
+    params = params.append('searchString', this.userParams().searchString);
 
     return this.http.get<Member[]>(`${this.baseUrl}users`, {
       observe: 'response',
@@ -53,5 +54,11 @@ export class MembersService {
 
   deletePhoto(photoId: number) {
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
+  }
+
+  getUsersFromSearch(searchString: string) {
+    return this.http.get<Member[]>(`${this.baseUrl}users/search/${searchString}`).pipe(
+      debounceTime(300)
+    );
   }
 }

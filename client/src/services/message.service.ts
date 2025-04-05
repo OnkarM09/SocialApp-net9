@@ -25,6 +25,7 @@ export class MessageService {
 
   paginatedResult = signal<PaginatedResult<Message[]> | null>(null);
   messageThread = signal<Message[]>([]);
+  userTyping = signal<any>(null);
 
   createHubConnection(user: User, otherUserName: string) {
     this.busyService.busy();
@@ -52,6 +53,16 @@ export class MessageService {
           return messages;
         })
       }
+    });
+
+    this.hubConnection.on('UserIsTyping', (details: any) => {
+      console.log('User typing', details);
+      this.userTyping.set(details);
+    });
+
+    this.hubConnection.on('UserIsNotTyping', () => {
+      console.log('User not typing');
+      this.userTyping.set(null);
     });
   }
 
@@ -81,11 +92,18 @@ export class MessageService {
     return this.hubConnection?.invoke('SendMessage', {
       recipientUsername: recipientUsername,
       content
-    })
-
+    });
   }
 
   deleteMessage(id: number) {
     return this.http.delete(this.baseUrl + 'messages/' + id);
+  }
+
+  sendUserTyping(userName: string) {
+    return this.hubConnection?.invoke('ShowUserTyping', userName);
+  }
+
+  hideUserTyping() {
+    return this.hubConnection?.invoke('HideUserTyping');
   }
 }

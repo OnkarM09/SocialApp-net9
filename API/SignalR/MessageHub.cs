@@ -40,6 +40,18 @@ namespace API.SignalR
             await base.OnDisconnectedAsync(exception);
         }
 
+        public async Task ShowUserTyping(string userName)
+        {
+            AppUser? user = await unitofWork.UserRepository.GetUserByUserNameAsync(userName);
+            if (user == null) throw new Exception("User not found!");
+            await Clients.Others.SendAsync("UserIsTyping", user.KnownAs);
+        }
+
+        public async Task HideUserTyping()
+        {
+            await Clients.Others.SendAsync("UserIsNotTyping");
+        }
+
         public async Task SendMessage(CreateMessageDto createMessageDto)
         {
             var userName = Context.User?.GetUserName() ?? throw new Exception("User not found!");

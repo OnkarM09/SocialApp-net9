@@ -31,6 +31,18 @@
   </div>
   <div class="card-footer">
     <form #messageForm="ngForm" (ngSubmit)="sendMessage(messageForm)">
+      @if(messageService.userTyping()){
+        <div class="d-flex align-items-center gap-1">
+          {{messageService.userTyping()}} is typing
+          <div class="ticontainer">
+            <div class="tiblock">
+              <div class="tidot"></div>
+              <div class="tidot"></div>
+              <div class="tidot"></div>
+            </div>
+          </div>
+        </div>
+      }
       <div class="input-group align-items-center">
         <div class="emoji-picker-container">
           <a href="javascript:void(0);" (click)="toggledEmoji = !toggledEmoji" class="text-primary me-3" aria-label="Toggle emoji picker"><i class="fa fa-smile-o fa-2x" aria-hidden="true"></i></a>
@@ -39,7 +51,7 @@
           }
         </div>
 
-        <textarea type="text" class="form-control input-sm me-2" placeholder="Send a private message" name="messageContent" [(ngModel)]="messageContent" (blur)="closeEmojiMart()" (focus)="closeEmojiMart()" required></textarea>
+        <textarea type="text" class="form-control input-sm me-2" placeholder="Send a private message" name="messageContent" [(ngModel)]="messageContent" (blur)="closeEmojiMart(); hideUserTyping();" (focus)="closeEmojiMart(); userTyping();" required></textarea>
         <div class="input-group-append">
           <button class="btn btn-default cursor-pointer" type="submit" [disabled]="!messageForm.valid" [disabled]="loading">
             <img src="./assets/send.png" alt="send" width="20" height="20" />

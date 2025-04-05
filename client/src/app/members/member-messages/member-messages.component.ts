@@ -4,6 +4,7 @@ import { TimeagoModule } from 'ngx-timeago';
 import { FormsModule, NgForm } from '@angular/forms';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { NgClass } from '@angular/common';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 
 @Component({
   selector: 'app-member-messages',
@@ -17,6 +18,7 @@ export class MemberMessagesComponent implements AfterViewChecked {
   @ViewChild('chatScroll') chatScroll?: any;
 
   messageService = inject(MessageService);
+  route = inject(ActivatedRoute);
 
   username = input.required<string>();
 
@@ -38,7 +40,6 @@ export class MemberMessagesComponent implements AfterViewChecked {
 
   @HostListener('document:click', ['$event'])
   clickout(event: Event) {
-    console.log(this.eRef.nativeElement)
     if (this.toggledEmoji && !this.eRef.nativeElement.contains(event.target)) {
       this.toggledEmoji = false;
     }
@@ -51,6 +52,22 @@ export class MemberMessagesComponent implements AfterViewChecked {
       this.closeEmojiMart();
       this.scrollToBottom();
     }).finally(() => this.loading =false);
+  }
+
+  userTyping() : void{
+    const username = this.route.snapshot.paramMap.get('username');
+    console.log('User typing', username)
+    if(username === null) return;
+    this.messageService.sendUserTyping(username)?.then(() => {
+      console.log('User is typing send')
+    });
+  }
+
+  hideUserTyping() : void{
+    this.messageService.hideUserTyping()?.then(() =>{
+      console.log('User typing hide')
+
+    });
   }
 
   addEmoji(event: any) {

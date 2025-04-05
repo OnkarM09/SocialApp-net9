@@ -1,7 +1,16 @@
 
 ::ng-deep{
+
+  .input-group{
+    max-width: 13rem;
+  }
   @media only screen and (max-width: 600px) {
     .page-actions{
+
+      .input-group{
+        max-width: 100%;
+      }
+
       flex-direction: column;
       h6, .ng-select, .btn{
         width : 100%;

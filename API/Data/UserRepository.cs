@@ -47,6 +47,13 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
         //Filter City
         if (userParams.City != null) query = query.Where(u => u.City == userParams.City);
 
+        if (!string.IsNullOrEmpty(userParams.SearchString))
+        {
+            query = query.Where(user =>
+                    user.UserName.ToLower().Contains(userParams.SearchString) ||
+                    user.KnownAs.ToLower().Contains(userParams.SearchString));
+        }
+
 
         var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
         var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
